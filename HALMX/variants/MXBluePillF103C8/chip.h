@@ -28,9 +28,18 @@
 /* delay in micoseconds  Uses HAL system clock */
 #define delay(a2) HAL_Delay(a2)
 
+
+/**
+ *     12 April 2016 by Vassilis Serasidis
+ */
 //Comment out the Serial port you need to use.
 #define USE_USART1
 #define USE_USART2
 //#define USE_USART3
+
+//Comment out the SPI port you need to use.
+#define USE_SPI1
+#define USE_SPI2
+/********************************************************/
 
 #endif
