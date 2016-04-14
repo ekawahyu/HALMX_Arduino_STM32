@@ -11,7 +11,7 @@ set str=%str:/=\%
 
 
 rem: ------------- use STLINK CLI
-stlink\ST-LINK_CLI.exe -c SWD -P %str% 0x8000000 -Rst -Run
+stlink\ST-LINK_CLI.exe -c SWD -P %str% 0x8000000 -Rst
 
 rem: Using the open source texane-stlink instead of the proprietary STM stlink exe
 rem:texane-stlink\st-flash.exe write %str% 0x8000000
