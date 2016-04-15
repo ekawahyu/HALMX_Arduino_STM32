@@ -33,3 +33,11 @@ I also noticed an option in the mac version of STM32CubeMX which is not in the w
 
 There are also issues with some of the non portable options to the gpio, like the GPIO_SPEED_FAST verses GPIO_SPEED_HIGH. I also had to move the __io_putchar() from the uart class into the variant as I was hard calling the serial write code. In theory this should let printf() connect to the serial port, but it is not working for me at present. I have not tried this again. 
 
+
+Updated. 2016-04-15  by Roger Clark
+
+Modified system_stm32f*xx.c so that VECT_TAB_OFFSET can be overridden if defined by compiler line arguement (to allow use of the bootloader)
+Added linker file with flash start address of 0x8002000 on the  Generic STM32F103 variant, to allow use of the bootloader
+
+
+

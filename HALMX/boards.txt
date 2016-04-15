@@ -134,30 +134,39 @@ MXSTM32F030F4Px.build.DRIVERS=STM32F0xx_HAL_Driver/Inc
 
 ##############################################################
 MXBluePillF103C8.name=Generic STM32F103C8 (20kB RAM, 64kB Flash)
-
-MXBluePillF103C8.upload.tool=stlink_upload
-MXBluePillF103C8.upload.protocol=maple_dfu
 MXBluePillF103C8.upload.maximum_size=65536
 
 MXBluePillF103C8.upload.file_type=bin
 MXBluePillF103C8.upload.ram.maximum_size=20480
-MXBluePillF103C8.upload.flash.maximum_size=65536
+MXBluePillF103C8.upload.flash.maximum_size=57344
 MXBluePillF103C8.upload.params.quiet=no
 
 MXBluePillF103C8.build.mcu=cortex-m3
 MXBluePillF103C8.build.f_cpu=72000000L
-MXBluePillF103C8.build.board=STM_NUCLEO_F103RB
+MXBluePillF103C8.build.board=Generic_STM32F103C8
 MXBluePillF103C8.build.core=mapleMX
 MXBluePillF103C8.build.common_flags=-mthumb  -D__STM32F1__ 
 
-MXBluePillF103C8.build.extra_flags=-DSTM32F103xB -DSTM32_MEDIUM_DENSITY -DSTM32F1 -DBOARD_NUCLEO_F103RB
-
-MXBluePillF103C8.build.ldscript=SW4STM32/MXBluePillF103C8/STM32F103C8Tx_FLASH.ld
 MXBluePillF103C8.build.variant=MXBluePillF103C8
 MXBluePillF103C8.build.variant_system_lib=lib_f103.a
 
 MXBluePillF103C8.build.CMSISInc=STM32F1xx/Include
 MXBluePillF103C8.build.DRIVERS=STM32F1xx_HAL_Driver/Inc
+
+
+MXBluePillF103C8.menu.upload_method.DFUUploadMethod=STM32duino bootloader
+MXBluePillF103C8.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+MXBluePillF103C8.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+MXBluePillF103C8.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+MXBluePillF103C8.menu.upload_method.DFUUploadMethod.upload.altID=2
+MXBluePillF103C8.menu.upload_method.DFUUploadMethod.build.extra_flags=-DSTM32F103xB -DSTM32_MEDIUM_DENSITY -DSTM32F1 -DBOARD_NUCLEO_F103RB -DVECT_TAB_OFFSET=0x02000
+MXBluePillF103C8.menu.upload_method.DFUUploadMethod.build.ldscript=SW4STM32/MXBluePillF103C8/STM32F103C8Tx_FLASH_0x2000.ld
+
+MXBluePillF103C8.menu.upload_method.STLinkMethod=STLink
+MXBluePillF103C8.menu.upload_method.STLinkMethod.upload.protocol=STLink
+MXBluePillF103C8.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+MXBluePillF103C8.menu.upload_method.STLinkMethod.build.extra_flags=-DSTM32F103xB -DSTM32_MEDIUM_DENSITY -DSTM32F1 -DBOARD_NUCLEO_F103RB -DVECT_TAB_OFFSET=0x0000
+MXBluePillF103C8.menu.upload_method.STLinkMethod.build.ldscript=SW4STM32/MXBluePillF103C8/STM32F103C8Tx_FLASH.ld
 
 ##############################################################
 MXDiscoF051R8.name=STM Discovery F0 (HALMX)
