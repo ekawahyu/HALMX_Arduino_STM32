@@ -33,13 +33,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 #include "i2c.h"
-#include "spi.h"
-#include "usart.h"
+//#include "spi.h"
+//#include "usart.h"
 #include "gpio.h"
-#include <chip.h>
 
 /* USER CODE BEGIN Includes */
-
+#include "variant.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -79,17 +78,19 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_SPI1_Init();
-  MX_SPI2_Init();
+  //MX_SPI1_Init();
+  //MX_SPI2_Init();
   //MX_USART1_UART_Init();
   //MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
   setup();
+  HAL_Delay(1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  //HAL_Delay(5000); //Delay some time to let the USB be initialized.
   while (1)
   {
   /* USER CODE END WHILE */
@@ -154,12 +155,21 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
-  if(huart->Instance == USART1)
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-  if(huart->Instance == USART2)
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+  //if(huart->Instance == USART1)
+  //  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+  //if(huart->Instance == USART2)
+  //  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
   //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1); //Toggle the state of pin PA1
 }
+
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
+  //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+}
+
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi){
+  //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+}
+
 /* USER CODE END 4 */
 
 #ifdef USE_FULL_ASSERT

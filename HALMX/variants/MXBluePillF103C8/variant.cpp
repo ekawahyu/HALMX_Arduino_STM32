@@ -16,7 +16,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
   - 08 April 2016 Modified by Vassilis Serasidis
-    This file is converted for using it with ST HAL + Arduino SAM core files.
+    This file is converted for using it with ST HAL + CubeMX + Arduino SAM core files.
 */
 
 #include "arduino.h"
@@ -32,43 +32,43 @@ extern "C" {
 extern const Pin2PortMapArray g_Pin2PortMapArray[]=
 {    
 
-    {GPIOA, GPIO_PIN_0	},	/*-WKUP	*/
-    {GPIOA, GPIO_PIN_1	},	/*	*/
-    {GPIOA, GPIO_PIN_2	},	/*	*/
-    {GPIOA, GPIO_PIN_3	},	/*	*/
-    {GPIOA, GPIO_PIN_4	},	/*SPI1_NSS	SPI1_NSS (opt)*/
-    {GPIOA, GPIO_PIN_5	},	/*SPI1_SCK	*/
-    {GPIOA, GPIO_PIN_6	},	/*SPI1_MISO	*/
-    {GPIOA, GPIO_PIN_7	},	/*SPI1_MOSI	*/
-    {GPIOA, GPIO_PIN_8	},	/*	*/
-    {GPIOA, GPIO_PIN_9	},	/*USART1_TX	*/
-    {GPIOA, GPIO_PIN_10	},	/*USART1_RX	*/
-    {GPIOA, GPIO_PIN_11	},	/*	*/
-    {GPIOA, GPIO_PIN_12	},	/*	*/
-    {GPIOA, GPIO_PIN_13	},	/*SYS_JTMS-SWDIO	*/
-    {GPIOA, GPIO_PIN_14	},	/*SYS_JTCK-SWCLK	*/
-    {GPIOA, GPIO_PIN_15	},	/*	*/
+    {GPIOA, GPIO_PIN_0   },  /*-WKUP  */
+    {GPIOA, GPIO_PIN_1   },  /*  */
+    {GPIOA, GPIO_PIN_2   },  /*  */
+    {GPIOA, GPIO_PIN_3   },  /*  */
+    {GPIOA, GPIO_PIN_4   },  /*SPI1_NSS  SPI1_NSS (opt)*/
+    {GPIOA, GPIO_PIN_5   },  /*SPI1_SCK  */
+    {GPIOA, GPIO_PIN_6   },  /*SPI1_MISO  */
+    {GPIOA, GPIO_PIN_7   },  /*SPI1_MOSI  */
+    {GPIOA, GPIO_PIN_8   },  /*  */
+    {GPIOA, GPIO_PIN_9   },  /*USART1_TX  */
+    {GPIOA, GPIO_PIN_10  },  /*USART1_RX  */
+    {GPIOA, GPIO_PIN_11  },  /* USBDM (-)  */
+    {GPIOA, GPIO_PIN_12  },  /* USBDP (+)  */
+    {GPIOA, GPIO_PIN_13  },  /*SYS_JTMS-SWDIO  */
+    {GPIOA, GPIO_PIN_14  },  /*SYS_JTCK-SWCLK  */
+    {GPIOA, GPIO_PIN_15  },  /*  */
     
-    {GPIOB, GPIO_PIN_0	},	/*	*/
-    {GPIOB, GPIO_PIN_1	},	/*Output	GPIO_Output	Blue_LED*/
-    {GPIOB, GPIO_PIN_2	},	/* BOOT1 */
-    {GPIOB, GPIO_PIN_3	},	/*	*/
-    {GPIOB, GPIO_PIN_4	},	/*	*/
-    {GPIOB, GPIO_PIN_5	},	/*	*/
-    {GPIOB, GPIO_PIN_6	},	/*I2C1_SCL	*/
-    {GPIOB, GPIO_PIN_7	},	/*I2C1_SDA	*/
-    {GPIOB, GPIO_PIN_8	},	/*CAN_RX	*/
-    {GPIOB, GPIO_PIN_9	},	/*CAN_TX	*/
-    {GPIOB, GPIO_PIN_10	},	/* USART3_TX	*/
-    {GPIOB, GPIO_PIN_11	},	/* USART3_RX	*/
-    {GPIOB, GPIO_PIN_12	},	/*	*/
-    {GPIOB, GPIO_PIN_13	},	/* SPI2 SCK */
-    {GPIOB, GPIO_PIN_14	},	/* SPI2 MISO */
-    {GPIOB, GPIO_PIN_15	},	/* SPI2 MOSI */
+    {GPIOB, GPIO_PIN_0   },  /*  */
+    {GPIOB, GPIO_PIN_1   },  /*Output  GPIO_Output  Blue_LED*/
+    {GPIOB, GPIO_PIN_2   },  /* BOOT1 */
+    {GPIOB, GPIO_PIN_3   },  /*  */
+    {GPIOB, GPIO_PIN_4   },  /*  */
+    {GPIOB, GPIO_PIN_5   },  /*  */
+    {GPIOB, GPIO_PIN_6   },  /*I2C1_SCL  */
+    {GPIOB, GPIO_PIN_7   },  /*I2C1_SDA  */
+    {GPIOB, GPIO_PIN_8   },  /*CAN_RX  */
+    {GPIOB, GPIO_PIN_9   },  /*CAN_TX  */
+    {GPIOB, GPIO_PIN_10  },  /* USART3_TX  */
+    {GPIOB, GPIO_PIN_11  },  /* USART3_RX  */
+    {GPIOB, GPIO_PIN_12  },  /* SPI2_NSS  */
+    {GPIOB, GPIO_PIN_13  },  /* SPI2_SCK */
+    {GPIOB, GPIO_PIN_14  },  /* SPI2_MISO */
+    {GPIOB, GPIO_PIN_15  },  /* SPI2_MOSI */
     
-    {GPIOC, GPIO_PIN_13	},	/*-TAMPER-RTC	Output	GPIO_Output	*/
-    {GPIOC, GPIO_PIN_14	}, 	/*-OSC32_IN		*/
-    {GPIOC, GPIO_PIN_15	} 	/*-OSC32_OUT	*/
+    {GPIOC, GPIO_PIN_13  },  /*-TAMPER-RTC  Output  GPIO_Output  */
+    {GPIOC, GPIO_PIN_14  },  /*-OSC32_IN    */
+    {GPIOC, GPIO_PIN_15  }   /*-OSC32_OUT  */
 } ;
 
 #ifdef __cplusplus
@@ -84,10 +84,9 @@ extern const Pin2PortMapArray g_Pin2PortMapArray[]=
 #endif /* __GNUC__ */
 
 
-// ----------------------------------------------------------------------------
-/*
- * USART objects
- */
+/* ----------------------------------------------------------------------------
+ *     USART objects
+ * ----------------------------------------------------------------------------*/
 
 #ifdef USE_USART1
 RingBuffer rx_buffer1;
@@ -124,3 +123,8 @@ void Rx3_Handler(void){
   Serial3.RxHandler();
 }
 #endif
+
+ 
+ 
+ 
+ 

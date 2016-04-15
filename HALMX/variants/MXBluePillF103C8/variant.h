@@ -1,14 +1,19 @@
-/*
-
-
-*/
+/****************************************************************************
+ * Copyright (c) 2016 by Vassilis Serasidis <info@serasidis.gr>
+ * 
+ * Variant definition library for Arduino STM32 + HAL + CubeMX (HALMX).
+ *
+ * This file is free software; you can redistribute it and/or modify
+ * it under the terms of either the GNU General Public License version 2
+ * or the GNU Lesser General Public License version 2.1, both as
+ * published by the Free Software Foundation.
+ ****************************************************************************/
 
 #ifndef _VARIANT_NUCLEO_F1xx_
 #define _VARIANT_NUCLEO_F1xx_
 
 #include <chip.h>
- /* #include "stm32f4xx_hal.h"  include this here so we do not have to use #ifdefs */
-
+ 
 /** Master clock frequency */
 #define VARIANT_MCK			F_CPU
 
@@ -17,16 +22,13 @@
  *        Headers
  *----------------------------------------------------------------------------*/
 
-//#include "Arduino.h"
+#include "Arduino.h"
 #ifdef __cplusplus
 #include "UARTClass.h"
 #include "USARTClass.h"
+
 #endif
 #endif
-
-
-
-
 
 #ifdef __cplusplus
 extern "C"{
@@ -42,12 +44,15 @@ extern "C"{
 #ifdef USE_USART1
 extern UART_HandleTypeDef huart1;
 #endif
+
 #ifdef USE_USART2
 extern UART_HandleTypeDef huart2;
 #endif
+
 #ifdef USE_USART3
 extern UART_HandleTypeDef huart3;
 #endif
+
 
 /*
 	From Roger Clark's maple port.  Convenance alias to
@@ -125,6 +130,7 @@ extern UARTClass Serial1;
 extern UARTClass Serial2;
 extern UARTClass Serial3;
 
+
 #endif
 
 #define SERIAL_PORT_MONITOR         Serial
@@ -135,9 +141,6 @@ extern UARTClass Serial3;
 #define SERIAL_PORT_HARDWARE        Serial
 #define SERIAL_PORT_HARDWARE1       Serial1
 #define SERIAL_PORT_HARDWARE2       Serial2
-#define SERIAL_PORT_HARDWARE3       Serial3
 
-#define SDA PA10
-#define SCL PA9
 
 #endif
