@@ -17,6 +17,14 @@
 /** Master clock frequency */
 #define VARIANT_MCK			F_CPU
 
+#define NO_ADC 0xffff
+
+#define NO_PWM 0xffff
+#define hTimer1 1
+#define hTimer2 2
+#define hTimer3 3
+#define hTimer4 4
+
 #if 1
 /*----------------------------------------------------------------------------
  *        Headers
@@ -25,7 +33,7 @@
 #include "Arduino.h"
 #ifdef __cplusplus
 #include "UARTClass.h"
-#include "USARTClass.h"
+//#include "USARTClass.h"
 
 #endif
 #endif
@@ -53,7 +61,6 @@ extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 #endif
 
-
 /*
 	From Roger Clark's maple port.  Convenance alias to
 	STM Nucleo abstractions.  If the LED is not blinking
@@ -74,7 +81,19 @@ enum {
   PC13, PC14, PC15
 };
 
-
+/*
+ * Analog pins
+ */
+static const uint8_t A0  = PA0;
+static const uint8_t A1  = PA1;
+static const uint8_t A2  = PA2;
+static const uint8_t A3  = PA3;
+static const uint8_t A4  = PA4;
+static const uint8_t A5  = PA5;
+static const uint8_t A6  = PA6;
+static const uint8_t A7  = PA7;
+static const uint8_t A8  = PB0;
+static const uint8_t A9  = PB1;
 
 /* Definitions and types for pins */
 
@@ -102,8 +121,10 @@ typedef struct _Pin2PortMapArray
   		is normally mutable and only used by the init code
   	*/
   	uint32_t 	Pin_abstraction;	/* must match type in GPIO_InitTypeDef struct */
-  
-  
+    
+    uint32_t  adc_channel;
+    uint32_t  timerNumber;   //Timer1 to Timer4.
+    uint32_t  timerChannel;  //Timer channel (1-4).  
 } Pin2PortMapArray ;
 
 /* Pins table to be instanciated into variant.cpp */
@@ -142,5 +163,18 @@ extern UARTClass Serial3;
 #define SERIAL_PORT_HARDWARE1       Serial1
 #define SERIAL_PORT_HARDWARE2       Serial2
 
+#define WIRE_INTERFACES_COUNT 1
+#define PIN_WIRE_SDA         (PB7)
+#define PIN_WIRE_SCL         (PB8)
+#define WIRE_INTERFACE       hi2c1
+#define WIRE_INTERFACE_ID    I2C2
+
+#define PIN_WIRE1_SDA        (PB11)
+#define PIN_WIRE1_SCL        (PB10)
+#define WIRE1_INTERFACE      hi2c2
+#define WIRE1_INTERFACE_ID   I2C2
+
+
+#define SPI_INTERFACES_COUNT 2
 
 #endif
