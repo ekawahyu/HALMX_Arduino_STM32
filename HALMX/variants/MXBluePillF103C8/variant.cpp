@@ -20,6 +20,7 @@
 */
 
 #include "arduino.h"
+//#include "tim.h"
 //#include "variant.h"
 
 
@@ -27,49 +28,50 @@
 extern "C" {
 #endif
 
-
 /* Quick and dirty table based on Blue pill board schematic */
+
 extern const Pin2PortMapArray g_Pin2PortMapArray[]=
 {    
 
-    {GPIOA, GPIO_PIN_0   },  /*-WKUP  */
-    {GPIOA, GPIO_PIN_1   },  /*  */
-    {GPIOA, GPIO_PIN_2   },  /*  */
-    {GPIOA, GPIO_PIN_3   },  /*  */
-    {GPIOA, GPIO_PIN_4   },  /*SPI1_NSS  SPI1_NSS (opt)*/
-    {GPIOA, GPIO_PIN_5   },  /*SPI1_SCK  */
-    {GPIOA, GPIO_PIN_6   },  /*SPI1_MISO  */
-    {GPIOA, GPIO_PIN_7   },  /*SPI1_MOSI  */
-    {GPIOA, GPIO_PIN_8   },  /*  */
-    {GPIOA, GPIO_PIN_9   },  /*USART1_TX  */
-    {GPIOA, GPIO_PIN_10  },  /*USART1_RX  */
-    {GPIOA, GPIO_PIN_11  },  /* USBDM (-)  */
-    {GPIOA, GPIO_PIN_12  },  /* USBDP (+)  */
-    {GPIOA, GPIO_PIN_13  },  /*SYS_JTMS-SWDIO  */
-    {GPIOA, GPIO_PIN_14  },  /*SYS_JTCK-SWCLK  */
-    {GPIOA, GPIO_PIN_15  },  /*  */
+    {GPIOA, GPIO_PIN_0,  ADC_CHANNEL_0, hTimer2,  TIM_CHANNEL_1 },  /*-WKUP  */
+    {GPIOA, GPIO_PIN_1,  ADC_CHANNEL_1, hTimer2,  TIM_CHANNEL_2 },  /*  */
+    {GPIOA, GPIO_PIN_2,  ADC_CHANNEL_2, hTimer2,  TIM_CHANNEL_3 },  /*  */
+    {GPIOA, GPIO_PIN_3,  ADC_CHANNEL_3, hTimer2,  TIM_CHANNEL_4 },  /*  */
+    {GPIOA, GPIO_PIN_4,  ADC_CHANNEL_4, NO_PWM,   NO_PWM        },  /*SPI1_NSS  SPI1_NSS (opt)*/
+    {GPIOA, GPIO_PIN_5,  ADC_CHANNEL_5, NO_PWM,   NO_PWM        },  /*SPI1_SCK  */
+    {GPIOA, GPIO_PIN_6,  ADC_CHANNEL_6, NO_PWM,   NO_PWM        },  /*SPI1_MISO  */
+    {GPIOA, GPIO_PIN_7,  ADC_CHANNEL_7, NO_PWM,   NO_PWM        },  /*SPI1_MOSI  */
+    {GPIOA, GPIO_PIN_8,  NO_ADC       , hTimer1,  TIM_CHANNEL_1 },  /*  */
+    {GPIOA, GPIO_PIN_9,  NO_ADC       , hTimer1,  TIM_CHANNEL_2 },  /*USART1_TX  */
+    {GPIOA, GPIO_PIN_10, NO_ADC       , hTimer1,  TIM_CHANNEL_3 },  /*USART1_RX  */
+    {GPIOA, GPIO_PIN_11, NO_ADC       , hTimer1,  TIM_CHANNEL_4 },  /* USBDM (-)  */
+    {GPIOA, GPIO_PIN_12, NO_ADC       , NO_PWM,   NO_PWM        },  /* USBDP (+)  */
+    {GPIOA, GPIO_PIN_13, NO_ADC       , NO_PWM,   NO_PWM        },  /*SYS_JTMS-SWDIO  */
+    {GPIOA, GPIO_PIN_14, NO_ADC       , NO_PWM,   NO_PWM        },  /*SYS_JTCK-SWCLK  */
+    {GPIOA, GPIO_PIN_15, NO_ADC       , NO_PWM,   NO_PWM        },  /*  */
     
-    {GPIOB, GPIO_PIN_0   },  /*  */
-    {GPIOB, GPIO_PIN_1   },  /*Output  GPIO_Output  Blue_LED*/
-    {GPIOB, GPIO_PIN_2   },  /* BOOT1 */
-    {GPIOB, GPIO_PIN_3   },  /*  */
-    {GPIOB, GPIO_PIN_4   },  /*  */
-    {GPIOB, GPIO_PIN_5   },  /*  */
-    {GPIOB, GPIO_PIN_6   },  /*I2C1_SCL  */
-    {GPIOB, GPIO_PIN_7   },  /*I2C1_SDA  */
-    {GPIOB, GPIO_PIN_8   },  /*CAN_RX  */
-    {GPIOB, GPIO_PIN_9   },  /*CAN_TX  */
-    {GPIOB, GPIO_PIN_10  },  /* USART3_TX  */
-    {GPIOB, GPIO_PIN_11  },  /* USART3_RX  */
-    {GPIOB, GPIO_PIN_12  },  /* SPI2_NSS  */
-    {GPIOB, GPIO_PIN_13  },  /* SPI2_SCK */
-    {GPIOB, GPIO_PIN_14  },  /* SPI2_MISO */
-    {GPIOB, GPIO_PIN_15  },  /* SPI2_MOSI */
+    {GPIOB, GPIO_PIN_0,  ADC_CHANNEL_8, hTimer3,  TIM_CHANNEL_3 },  /*  */
+    {GPIOB, GPIO_PIN_1,  ADC_CHANNEL_9, hTimer3,  TIM_CHANNEL_4 },  /*Output  GPIO_Output  Blue_LED*/
+    {GPIOB, GPIO_PIN_2,  NO_ADC       , NO_PWM,   NO_PWM        },  /* BOOT1 */
+    {GPIOB, GPIO_PIN_3,  NO_ADC       , NO_PWM,   NO_PWM        },  /*  */
+    {GPIOB, GPIO_PIN_4,  NO_ADC       , hTimer3,  TIM_CHANNEL_1 },  /*  */
+    {GPIOB, GPIO_PIN_5,  NO_ADC       , hTimer3,  TIM_CHANNEL_2 },  /*  */
+    {GPIOB, GPIO_PIN_6,  NO_ADC       , hTimer4,  TIM_CHANNEL_1 },  /*I2C1_SCL  */
+    {GPIOB, GPIO_PIN_7,  NO_ADC       , hTimer4,  TIM_CHANNEL_2 },  /*I2C1_SDA  */
+    {GPIOB, GPIO_PIN_8,  NO_ADC       , hTimer4,  TIM_CHANNEL_3 },  /*CAN_RX  */
+    {GPIOB, GPIO_PIN_9,  NO_ADC       , hTimer4,  TIM_CHANNEL_4 },  /*CAN_TX  */
+    {GPIOB, GPIO_PIN_10, NO_ADC       , NO_PWM,   NO_PWM        },  /* USART3_TX  */
+    {GPIOB, GPIO_PIN_11, NO_ADC       , NO_PWM,   NO_PWM        },  /* USART3_RX  */
+    {GPIOB, GPIO_PIN_12, NO_ADC       , NO_PWM,   NO_PWM        },  /* SPI2_NSS  */
+    {GPIOB, GPIO_PIN_13, NO_ADC       , NO_PWM,   NO_PWM        },  /* SPI2_SCK */
+    {GPIOB, GPIO_PIN_14, NO_ADC       , NO_PWM,   NO_PWM        },  /* SPI2_MISO */
+    {GPIOB, GPIO_PIN_15, NO_ADC       , NO_PWM,   NO_PWM        },  /* SPI2_MOSI */
     
-    {GPIOC, GPIO_PIN_13  },  /*-TAMPER-RTC  Output  GPIO_Output  */
-    {GPIOC, GPIO_PIN_14  },  /*-OSC32_IN    */
-    {GPIOC, GPIO_PIN_15  }   /*-OSC32_OUT  */
-} ;
+    {GPIOC, GPIO_PIN_13, NO_ADC       , NO_PWM,   NO_PWM        },  /*-TAMPER-RTC  Output  GPIO_Output  */
+    {GPIOC, GPIO_PIN_14, NO_ADC       , NO_PWM,   NO_PWM        },  /*-OSC32_IN    */
+    {GPIOC, GPIO_PIN_15, NO_ADC       , NO_PWM,   NO_PWM        }   /*-OSC32_OUT  */
+};
+
 
 #ifdef __cplusplus
 }

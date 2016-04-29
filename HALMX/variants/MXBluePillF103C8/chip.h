@@ -42,4 +42,10 @@
 #define USE_SPI2
 /********************************************************/
 
+//Number of Analog-to-Digital-Converter (ADC) pins that has the STM32F103C8 MCU
+#define BOARD_NR_ADC_PINS 9 //The STM32F103C8 has 9 Analog inputs.
+
+//Number of Pulse-Width-Modulation (PWM) pins that has the STM32F103C8 MCU
+#define BOARD_NR_PWM_PINS 12
+
 #endif

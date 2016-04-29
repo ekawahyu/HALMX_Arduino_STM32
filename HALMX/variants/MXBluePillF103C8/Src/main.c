@@ -32,12 +32,20 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
-#include "i2c.h"
+#include "adc.h"
+//#include "i2c.h"
 //#include "spi.h"
+//#include "tim.h"
 //#include "usart.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
+/*****************************************
+ * Comment out (//...) only: 
+ *  #include "i2c.h"
+ *  #include "spi.h"
+ *  #include "usart.h"
+ *****************************************/ 
 #include "variant.h"
 /* USER CODE END Includes */
 
@@ -77,13 +85,28 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_I2C1_Init();
+  //MX_I2C1_Init();
   //MX_SPI1_Init();
   //MX_SPI2_Init();
   //MX_USART1_UART_Init();
   //MX_USART2_UART_Init();
+  //MX_I2C2_Init();
+  MX_ADC1_Init();
+  //MX_TIM3_Init();
 
   /* USER CODE BEGIN 2 */
+  //HAL_TIM_PWM_Init(&htim3);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  /*****************************************
+   * Comment out (//...) only: 
+   *  MX_I2C1_Init();
+   *  MX_SPI1_Init();
+   *  MX_SPI2_Init();
+   *  MX_USART1_UART_Init();
+   *  MX_USART2_UART_Init();
+   *  MX_I2C2_Init();
+   *
+   *****************************************/
   setup();
   HAL_Delay(1000);
   /* USER CODE END 2 */
@@ -109,6 +132,7 @@ void SystemClock_Config(void)
 
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -125,6 +149,10 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
+
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
 
@@ -168,6 +196,22 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
 
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi){
   //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+}
+
+void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c){
+  //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+}
+
+void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c){
+  //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
+	//HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+}
+
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
+	//HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 }
 
 /* USER CODE END 4 */
