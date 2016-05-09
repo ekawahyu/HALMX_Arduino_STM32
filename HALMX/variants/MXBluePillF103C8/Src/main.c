@@ -183,11 +183,18 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
-  //if(huart->Instance == USART1)
-  //  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-  //if(huart->Instance == USART2)
-  //  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-  //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1); //Toggle the state of pin PA1
+#ifdef USE_USART1
+  if(huart->Instance == USART1)
+    Tx1_Handler();
+#endif
+#ifdef USE_USART2
+  if(huart->Instance == USART2)
+    Tx2_Handler();
+#endif
+#ifdef USE_USART3
+  if(huart->Instance == USART3)
+    Tx3_Handler();
+#endif
 }
 
 void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){

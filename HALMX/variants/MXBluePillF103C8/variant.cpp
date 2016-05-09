@@ -91,9 +91,7 @@ extern const Pin2PortMapArray g_Pin2PortMapArray[]=
  * ----------------------------------------------------------------------------*/
 
 #ifdef USE_USART1
-RingBuffer rx_buffer1;
-RingBuffer tx_buffer1;
-UARTClass Serial1(&huart1, USART1_IRQn, 0, &rx_buffer1, &tx_buffer1, USART1);
+UARTClass Serial1(&huart1, USART1_IRQn, 0, USART1);
 void Tx1_Handler(void){
   Serial1.TxHandler();
 }
@@ -103,9 +101,7 @@ void Rx1_Handler(void){
 #endif
 
 #ifdef USE_USART2
-RingBuffer rx_buffer2;
-RingBuffer tx_buffer2;
-UARTClass Serial2(&huart2, USART2_IRQn, 1, &rx_buffer2, &tx_buffer2, USART2);
+UARTClass Serial2(&huart2, USART2_IRQn, 1, USART2);
 void Tx2_Handler(void){
   Serial2.TxHandler();
 }
@@ -115,9 +111,7 @@ void Rx2_Handler(void){
 #endif
 
 #ifdef USE_USART3
-RingBuffer rx_buffer3;
-RingBuffer tx_buffer3;
-UARTClass Serial3(&huart3, USART3_IRQn, 2, &rx_buffer3, &tx_buffer3, USART3);
+UARTClass Serial3(&huart3, USART3_IRQn, 2, USART3);
 void Tx3_Handler(void){
   Serial3.TxHandler();
 }
