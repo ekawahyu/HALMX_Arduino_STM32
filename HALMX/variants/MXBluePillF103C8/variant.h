@@ -13,7 +13,11 @@
 #define _VARIANT_NUCLEO_F1xx_
 
 #include <chip.h>
- 
+
+#ifdef USE_USBSerial
+#include "usbd_cdc_if.h"
+#endif
+
 /** Master clock frequency */
 #define VARIANT_MCK			F_CPU
 
@@ -25,7 +29,6 @@
 #define hTimer3 3
 #define hTimer4 4
 
-#if 1
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -33,9 +36,11 @@
 #include "Arduino.h"
 #ifdef __cplusplus
 #include "UARTClass.h"
-//#include "USARTClass.h"
 
+#ifdef USE_USBSerial
+#include <USBSerial.h>
 #endif
+
 #endif
 
 #ifdef __cplusplus
@@ -59,6 +64,10 @@ extern UART_HandleTypeDef huart2;
 
 #ifdef USE_USART3
 extern UART_HandleTypeDef huart3;
+#endif
+
+#ifdef USE_USBSerial
+extern USBD_HandleTypeDef hUsbDeviceFS;
 #endif
 
 /*
@@ -136,7 +145,9 @@ void Rx2_Handler(void); /* Vassilis Serasidis */
 void Tx2_Handler(void); /* Vassilis Serasidis */
 void Rx3_Handler(void); /* Vassilis Serasidis */
 void Tx3_Handler(void); /* Vassilis Serasidis */
-
+void USBSerial_Rx_Handler(uint8_t *data, uint16_t len); /* Vassilis Serasidis */
+void USBSerial_Tx_Handler(uint8_t *data, uint16_t len); /* Vassilis Serasidis */
+void StartUSBSerial(void);
 #ifdef __cplusplus
 }
 #endif
@@ -147,10 +158,21 @@ void Tx3_Handler(void); /* Vassilis Serasidis */
 
 #ifdef __cplusplus
 
+#ifdef USE_USART1
 extern UARTClass Serial1;
-extern UARTClass Serial2;
-extern UARTClass Serial3;
+#endif
 
+#ifdef USE_USART2
+extern UARTClass Serial2;
+#endif
+
+#ifdef USE_USART3
+extern UARTClass Serial3;
+#endif
+
+#ifdef USE_USBSerial
+extern USBSerial Serial;
+#endif
 
 #endif
 
