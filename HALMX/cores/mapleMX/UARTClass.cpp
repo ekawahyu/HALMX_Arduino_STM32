@@ -168,31 +168,19 @@ void UARTClass::RxHandler (void){
   
     if(available() < (SERIAL_BUFFER_SIZE - 1)){ //If there is empty space in rx_buffer, read a byte from the Serial port and save it to the buffer.  
     rx_buffer.buffer[rx_buffer.iHead] = r_byte; 
-<<<<<<< HEAD
 		rx_buffer.iHead = (uint16_t)(rx_buffer.iHead + 1) % SERIAL_BUFFER_SIZE;
-=======
-		rx_buffer.iHead = (uint32_t)(rx_buffer.iHead + 1) % SERIAL_BUFFER_SIZE;
->>>>>>> origin/master
   }
   HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1); //Get prepared for the next incoming byte.
 }
 
 /************************************************
-<<<<<<< HEAD
- * 09 May 2016 by Vassilis Serasidis
-=======
  * 09 March 2016 by Vassilis Serasidis
->>>>>>> origin/master
  */
 void UARTClass::TxHandler(void){
   
   if (tx_buffer.iHead != tx_buffer.iTail)	{
 		unsigned char c = tx_buffer.buffer[tx_buffer.iTail];
-<<<<<<< HEAD
 		tx_buffer.iTail = (uint16_t)(tx_buffer.iTail + 1) % SERIAL_BUFFER_SIZE;
-=======
-		tx_buffer.iTail = (uint32_t)(tx_buffer.iTail + 1) % SERIAL_BUFFER_SIZE;
->>>>>>> origin/master
 		HAL_UART_Transmit_IT(_pUart, (uint8_t *)&c, 1);
   }
 }

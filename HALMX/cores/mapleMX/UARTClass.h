@@ -74,24 +74,15 @@ class UARTClass : public HardwareSerial
     struct ring_buffer
     {
       uint8_t buffer[SERIAL_BUFFER_SIZE];
-<<<<<<< HEAD
       volatile uint16_t iHead;
       volatile uint16_t iTail;
-=======
-      volatile uint32_t iHead;
-      volatile uint32_t iTail;
->>>>>>> origin/master
     };
     
     UART_HandleTypeDef *_pUart;
     IRQn_Type _dwIrq;
     uint32_t _dwId;
     USART_TypeDef* _usartNumber;
-<<<<<<< HEAD
     uint8_t r_byte;
-=======
-    
->>>>>>> origin/master
     ring_buffer tx_buffer = { { 0 }, 0, 0};
     ring_buffer rx_buffer = { { 0 }, 0, 0};
 
