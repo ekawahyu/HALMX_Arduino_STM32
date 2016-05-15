@@ -120,7 +120,23 @@ void Rx3_Handler(void){
 }
 #endif
 
- 
- 
- 
- 
+#ifdef USE_USBSerial
+//uint8_t CDC_RxBuffer[CDC_RX_DATA_SIZE];
+//uint8_t CDC_TxBuffer[CDC_TX_DATA_SIZE];
+
+//RingBuffer USB_rx_buffer;
+//USBSerial Serial(CDC_RxBuffer, CDC_TxBuffer);
+USBSerial Serial;
+
+void USBSerial_Tx_Handler(uint8_t *data, uint16_t len){
+  Serial.CDC_TxHandler();
+}
+
+void USBSerial_Rx_Handler(uint8_t *data, uint16_t len){
+  Serial.CDC_RxHandler(data, len);
+}
+
+void StartUSBSerial (void){
+  Serial.begin(9600);
+}
+#endif

@@ -33,6 +33,9 @@
  *     12 April 2016 by Vassilis Serasidis
  */
 //Comment out the Serial port you need to use.
+#define CDC_SERIAL_BUFFER_SIZE  128 //USBSerial buffer data length
+
+#define USE_USBSerial
 #define USE_USART1
 #define USE_USART2
 //#define USE_USART3

@@ -35,8 +35,9 @@
 #include "adc.h"
 //#include "i2c.h"
 //#include "spi.h"
-//#include "tim.h"
+#include "tim.h"
 //#include "usart.h"
+//#include "usb_device.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
@@ -45,6 +46,7 @@
  *  #include "i2c.h"
  *  #include "spi.h"
  *  #include "usart.h"
+ *  #include "usb_device.h"
  *****************************************/ 
 #include "variant.h"
 /* USER CODE END Includes */
@@ -65,7 +67,7 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+//GPIO_InitTypeDef GPIO_InitStruct;
 /* USER CODE END 0 */
 
 int main(void)
@@ -90,9 +92,9 @@ int main(void)
   //MX_SPI2_Init();
   //MX_USART1_UART_Init();
   //MX_USART2_UART_Init();
-  //MX_I2C2_Init();
+  //MX_USB_DEVICE_Init();
   MX_ADC1_Init();
-  //MX_TIM3_Init();
+  MX_TIM1_Init();
 
   /* USER CODE BEGIN 2 */
   //HAL_TIM_PWM_Init(&htim3);
@@ -104,11 +106,28 @@ int main(void)
    *  MX_SPI2_Init();
    *  MX_USART1_UART_Init();
    *  MX_USART2_UART_Init();
-   *  MX_I2C2_Init();
+   *  MX_USB_DEVICE_Init();
    *
    *****************************************/
+#ifdef USE_USBSerial     
+ /**
+  * Re-enumerate USB (PA12 pin) 
+  */
+  // volatile unsigned int i;
+  // GPIO_InitStruct.Pin = GPIO_PIN_12;
+  // GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  // HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	// HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+	// for(i=0;i<512;i++);
+	// HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+  /****************************************************/
+
+  StartUSBSerial(); //Start USBSerial.
+#endif
+
   setup();
-  HAL_Delay(1000);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -150,8 +169,9 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC|RCC_PERIPHCLK_USB;
   PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
   HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
