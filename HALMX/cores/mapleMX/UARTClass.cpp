@@ -174,7 +174,7 @@ void UARTClass::RxHandler (void){
 }
 
 /************************************************
- * 09 March 2016 by Vassilis Serasidis
+ * 09 May 2016 by Vassilis Serasidis
  */
 void UARTClass::TxHandler(void){
   
