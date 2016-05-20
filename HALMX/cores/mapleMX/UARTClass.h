@@ -83,8 +83,8 @@ class UARTClass : public HardwareSerial
     uint32_t _dwId;
     USART_TypeDef* _usartNumber;
     uint8_t r_byte;
-    ring_buffer tx_buffer = { { 0 }, 0, 0};
-    ring_buffer rx_buffer = { { 0 }, 0, 0};
+    ring_buffer tx_buffer;// = { { 0 }, 0, 0};
+    ring_buffer rx_buffer;// = { { 0 }, 0, 0};
 
 };
 

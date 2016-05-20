@@ -5,6 +5,30 @@ menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
 
 ##############################################################
+MXDiscoF072RBTx.name=STM32F072B-DISCO
+
+MXDiscoF072RBTx.upload.file_type=bin
+MXDiscoF072RBTx.upload.flash.maximum_size=128k
+MXDiscoF072RBTx.upload.ram.maximum_size=20k
+
+MXDiscoF072RBTx.build.mcu=cortex-m0
+MXDiscoF072RBTx.build.f_cpu=48000000L
+MXDiscoF072RBTx.build.board=HALMX_MXDISCOF072RBTX
+MXDiscoF072RBTx.build.core=mapleMX
+
+MXDiscoF072RBTx.build.variant=MXDiscoF072RBTx
+MXDiscoF072RBTx.build.CMSISInc=STM32F0xx/Include
+MXDiscoF072RBTx.build.DRIVERS=STM32F0xx_HAL_Driver/Inc
+MXDiscoF072RBTx.build.common_flags=-mthumb -D__STM32F0__
+MXDiscoF072RBTx.build.extra_flags=-DSTM32F072xB
+MXDiscoF072RBTx.build.ldscript=SW4STM32/MXDiscoF072RBTx/STM32F072RBTx_FLASH.ld
+
+MXDiscoF072RBTx.menu.upload_method.STLinkMethod=STLink
+MXDiscoF072RBTx.menu.upload_method.STLinkMethod.upload.protocol=STLink
+MXDiscoF072RBTx.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+
+
+##############################################################
 #MXNucleoF401.name=STM Nucleo F401RE (HALMX)
 
 #MXNucleoF401.upload.tool=stlink_upload

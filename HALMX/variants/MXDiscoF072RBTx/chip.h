@@ -44,4 +44,7 @@
 /* delay in microseconds  Uses HAL system clock */
 #define delay(a2) HAL_Delay(a2)
 
+//#define CDC_SERIAL_BUFFER_SIZE  128
+//#define USE_USBSerial
+
 #endif /* INC_CHIP_STM32F072C8_H_ */

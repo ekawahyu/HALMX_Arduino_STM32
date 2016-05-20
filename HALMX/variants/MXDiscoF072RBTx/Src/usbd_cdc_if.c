@@ -33,7 +33,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_if.h"
 /* USER CODE BEGIN INCLUDE */
-#include "stm32f0xx_hal_conf.h"
 /* USER CODE END INCLUDE */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -60,8 +59,8 @@
 /* USER CODE BEGIN PRIVATE_DEFINES */
 /* Define size for the receive and transmit buffer over CDC */
 /* It's up to user to redefine and/or remove those define */
-#define APP_RX_DATA_SIZE  512
-#define APP_TX_DATA_SIZE  512
+#define APP_RX_DATA_SIZE  4
+#define APP_TX_DATA_SIZE  4
 /* USER CODE END PRIVATE_DEFINES */
 /**
   * @}
@@ -92,7 +91,6 @@ uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 /* Handle for USB Full Speed IP */
   USBD_HandleTypeDef  *hUsbDevice_0;
 /* USER CODE BEGIN PRIVATE_VARIABLES */
-TIM_HandleTypeDef htim3;
 uint32_t UserTxBufPtrIn = 0;/* Increment this pointer or roll it back to
                                start address when data are received over UART */
 uint32_t UserTxBufPtrOut = 0; /* Increment this pointer or roll it back to
@@ -101,6 +99,7 @@ uint32_t UserRxBufPtrIn = 0;/* Increment this pointer or roll it back to
                                start address when data are received over USB */
 uint32_t UserRxBufPtrOut = 0; /* Increment this pointer or roll it back to
                                  start address when data are sent over UART */
+
 /* USER CODE END PRIVATE_VARIABLES */
 
 /**
@@ -127,9 +126,6 @@ static int8_t CDC_Control_FS  (uint8_t cmd, uint8_t* pbuf, uint16_t length);
 static int8_t CDC_Receive_FS  (uint8_t* pbuf, uint32_t *Len);
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
-void vcp_putchar(uint8_t buf);
-int16_t vcp_getchar(uint8_t *buf);
-void MX_TIM3_Init(void);
 /* USER CODE END PRIVATE_FUNCTIONS_DECLARATION */
 
 /**
@@ -155,12 +151,6 @@ static int8_t CDC_Init_FS(void)
 {
   hUsbDevice_0 = &hUsbDeviceFS;
   /* USER CODE BEGIN 3 */ 
-  /* Start the TIM Base generation in interrupt mode */
-  MX_TIM3_Init();
-
-  /* Start Channel1 */
-  HAL_TIM_Base_Start_IT(&htim3);
-
   /* Set Application Buffers */
   USBD_CDC_SetTxBuffer(hUsbDevice_0, UserTxBufferFS, 0);
   USBD_CDC_SetRxBuffer(hUsbDevice_0, UserRxBufferFS);
@@ -273,18 +263,6 @@ static int8_t CDC_Control_FS  (uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
-  uint32_t i;
-
-  for (i = 0; i < *Len; i++) {
-    UserRxBufferFS[UserRxBufPtrIn] = *(Buf + i);
-    UserRxBufPtrIn++;
-    if (UserRxBufPtrIn == APP_RX_DATA_SIZE)
-      UserRxBufPtrIn = 0;
-
-    if (UserRxBufPtrIn == UserRxBufPtrOut)
-      return (USBD_FAIL);
-  }
-
   USBD_CDC_SetRxBuffer(hUsbDevice_0, &Buf[0]);
   USBD_CDC_ReceivePacket(hUsbDevice_0);
   return (USBD_OK);
@@ -317,7 +295,7 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 }
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
-void vcp_putchar(uint8_t buf)
+void __io_putchar(uint8_t buf)
 {
   /* Increment Index for buffer writing */
   UserTxBufferFS[UserTxBufPtrIn] = buf;
@@ -341,27 +319,6 @@ int16_t vcp_getchar(uint8_t *buf)
     UserRxBufPtrOut = 0;
 
   return *buf;
-}
-
-/* TIM3 init function */
-void MX_TIM3_Init(void)
-{
-  TIM_ClockConfigTypeDef sClockSourceConfig;
-  TIM_MasterConfigTypeDef sMasterConfig;
-
-  htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 84-1;
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = (CDC_POLLING_INTERVAL*1000) - 1;
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  HAL_TIM_Base_Init(&htim3);
-
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig);
-
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);
 }
 
 /**
@@ -399,7 +356,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     }
   }
 }
-
 /* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */
 
 /**
