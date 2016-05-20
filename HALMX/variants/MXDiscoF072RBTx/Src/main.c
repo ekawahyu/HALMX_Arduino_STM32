@@ -89,12 +89,17 @@ int main(void)
   MX_USART1_UART_Init();
 
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim3);
+
   /* No buffering, serial input/output occurs immediately */
   setvbuf(stdin,  NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
 
+  /* Increase delay time if you don't see any printf() happening on USB CDC ACM */
+  /* TODO Halt here until USB CDC ACM is ready */
   //HAL_Delay(2000);
+
   setup();
   /* USER CODE END 2 */
 
@@ -107,7 +112,8 @@ int main(void)
   /* USER CODE BEGIN 3 */
     loop();
     //HAL_Delay(1000);
-    //printf("Hello STM32\n");
+    //int key = getchar();
+    //printf("Hello STM32 (%c)\n", (char)key);
   }
   /* USER CODE END 3 */
 

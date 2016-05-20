@@ -59,8 +59,8 @@
 /* USER CODE BEGIN PRIVATE_DEFINES */
 /* Define size for the receive and transmit buffer over CDC */
 /* It's up to user to redefine and/or remove those define */
-#define APP_RX_DATA_SIZE  4
-#define APP_TX_DATA_SIZE  4
+#define APP_RX_DATA_SIZE  512
+#define APP_TX_DATA_SIZE  512
 /* USER CODE END PRIVATE_DEFINES */
 /**
   * @}
@@ -263,6 +263,18 @@ static int8_t CDC_Control_FS  (uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
+  uint32_t i;
+
+  for (i = 0; i < *Len; i++) {
+    UserRxBufferFS[UserRxBufPtrIn] = *(Buf + i);
+    UserRxBufPtrIn++;
+    if (UserRxBufPtrIn == APP_RX_DATA_SIZE)
+      UserRxBufPtrIn = 0;
+
+    if (UserRxBufPtrIn == UserRxBufPtrOut)
+      return (USBD_FAIL);
+  }
+
   USBD_CDC_SetRxBuffer(hUsbDevice_0, &Buf[0]);
   USBD_CDC_ReceivePacket(hUsbDevice_0);
   return (USBD_OK);
@@ -295,10 +307,10 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 }
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
-void __io_putchar(uint8_t buf)
+int __io_putchar(int buf)
 {
   /* Increment Index for buffer writing */
-  UserTxBufferFS[UserTxBufPtrIn] = buf;
+  UserTxBufferFS[UserTxBufPtrIn] = (uint8_t)buf;
   UserTxBufPtrIn++;
 
   /* To avoid buffer overflow */
@@ -306,19 +318,23 @@ void __io_putchar(uint8_t buf)
   {
     UserTxBufPtrIn = 0;
   }
+
+  return 0;
 }
 
-int16_t vcp_getchar(uint8_t *buf)
+int __io_getchar(void)
 {
+  int ret;
+
   if (UserRxBufPtrIn == UserRxBufPtrOut)
     return -1;
 
-  *buf = UserRxBufferFS[UserRxBufPtrOut];
+  ret = UserRxBufferFS[UserRxBufPtrOut];
   UserRxBufPtrOut++;
   if (UserRxBufPtrOut == APP_RX_DATA_SIZE)
     UserRxBufPtrOut = 0;
 
-  return *buf;
+  return ret;
 }
 
 /**
