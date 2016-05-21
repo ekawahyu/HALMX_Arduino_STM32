@@ -35,7 +35,9 @@
 #include "usb_device.h"
 
 /* USER CODE BEGIN Includes */
-
+#define SYSMEM_RESET_VECTOR            0x1FFFC804
+#define RESET_TO_BOOTLOADER_MAGIC_CODE 0xDEADBEEF
+#define BOOTLOADER_STACK_POINTER       0x20002250
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -47,7 +49,7 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+uint32_t dfu_reset_to_bootloader_magic;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,7 +65,22 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+void __initialize_hardware_early(void)
+{
+  if (dfu_reset_to_bootloader_magic == RESET_TO_BOOTLOADER_MAGIC_CODE) {
+    void (*bootloader)(void) = (void (*)(void)) (*((uint32_t *) SYSMEM_RESET_VECTOR));
+    dfu_reset_to_bootloader_magic = 0;
+    __set_MSP(BOOTLOADER_STACK_POINTER);
+    bootloader();
+    while (42);
+  }
+}
 
+void dfu_run_bootloader()
+{
+  dfu_reset_to_bootloader_magic = RESET_TO_BOOTLOADER_MAGIC_CODE;
+  NVIC_SystemReset();
+}
 /* USER CODE END 0 */
 
 int main(void)
@@ -112,8 +129,9 @@ int main(void)
   /* USER CODE BEGIN 3 */
     loop();
     //HAL_Delay(1000);
-    //int key = getchar();
     //printf("Hello STM32 (%c)\n", (char)key);
+    int key = getchar();
+    if (key == '1') dfu_run_bootloader();
   }
   /* USER CODE END 3 */
 
@@ -250,10 +268,10 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PC6 */
-  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  /*Configure GPIO pins : PC6 PC7 PC8 PC9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

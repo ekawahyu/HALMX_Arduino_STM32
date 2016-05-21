@@ -33,6 +33,11 @@ MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.tool=openocd_upload
 MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.interface=stlink-v2
 MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.target=stm32f0x
 
+MXDiscoF072RBTx.menu.upload_method.DFUUploadMethod=STM32DFU
+MXDiscoF072RBTx.menu.upload_method.DFUUploadMethod.upload.protocol=STM32DFU
+MXDiscoF072RBTx.menu.upload_method.DFUUploadMethod.upload.tool=dfu_upload
+MXDiscoF072RBTx.menu.upload_method.DFUUploadMethod.upload.usbID=0483:df11
+MXDiscoF072RBTx.menu.upload_method.DFUUploadMethod.upload.altID=0
 
 ##############################################################
 #MXNucleoF401.name=STM Nucleo F401RE (HALMX)

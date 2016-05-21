@@ -209,4 +209,14 @@ tools.openocd_upload.path.windows={runtime.hardware.path}/tools/win
 tools.openocd_upload.path.macosx=/opt/local # need to build openocd with static libraries instead
 tools.openocd_upload.path.linux={runtime.hardware.path}/tools/linux
 tools.openocd_upload.upload.params.verbose=
+tools.dfu_upload.upload.params.quiet=
 tools.openocd_upload.upload.pattern="{path}/bin/{cmd}" -s "{path}/share/{cmd}/scripts" -f "interface/{upload.interface}.cfg" -f "target/{upload.target}.cfg" -c "init; reset halt; flash write_image erase {build.path}/{build.project_name}.bin 0x08000000; reset run; shutdown"
+
+# STM32 built-in DFU upload
+tools.dfu_upload.cmd=dfu_upload              
+tools.dfu_upload.path={runtime.hardware.path}/tools/win
+tools.dfu_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.dfu_upload.path.linux={runtime.hardware.path}/tools/linux    
+tools.dfu_upload.upload.params.verbose=
+tools.dfu_upload.upload.params.quiet=
+tools.dfu_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"

@@ -67,6 +67,8 @@ Reset_Handler:
   ldr   r0, =_estack
   mov   sp, r0          /* set stack pointer */
 
+  bl  __initialize_hardware_early /* check for DFU soft boot */
+
 /* Copy the data segment initializers from flash to SRAM */
   movs r1, #0
   b LoopCopyDataInit
