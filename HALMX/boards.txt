@@ -15,8 +15,8 @@ MXDiscoF072RBTx.build.mcu=cortex-m0
 MXDiscoF072RBTx.build.f_cpu=48000000L
 MXDiscoF072RBTx.build.board=HALMX_MXDISCOF072RBTX
 MXDiscoF072RBTx.build.core=mapleMX
-
 MXDiscoF072RBTx.build.variant=MXDiscoF072RBTx
+
 MXDiscoF072RBTx.build.CMSISInc=STM32F0xx/Include
 MXDiscoF072RBTx.build.DRIVERS=STM32F0xx_HAL_Driver/Inc
 MXDiscoF072RBTx.build.common_flags=-mthumb -D__STM32F0__
@@ -26,6 +26,12 @@ MXDiscoF072RBTx.build.ldscript=SW4STM32/MXDiscoF072RBTx/STM32F072RBTx_FLASH.ld
 MXDiscoF072RBTx.menu.upload_method.STLinkMethod=STLink
 MXDiscoF072RBTx.menu.upload_method.STLinkMethod.upload.protocol=STLink
 MXDiscoF072RBTx.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+
+MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod=OpenOCD
+MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.protocol=OpenOCD
+MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.tool=openocd_upload
+MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.interface=stlink-v2
+MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.target=stm32f0x
 
 
 ##############################################################
