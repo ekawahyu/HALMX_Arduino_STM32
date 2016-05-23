@@ -41,6 +41,8 @@
 
 #include "stm32f0xx_hal.h"
 
+#define USB_LP_CAN1_RX0_IRQn USB_IRQn
+
 /* from STM boilerplate:
       Systick timer is used by default as source of time base, but user
             can eventually implement his proper time base source (a general purpose

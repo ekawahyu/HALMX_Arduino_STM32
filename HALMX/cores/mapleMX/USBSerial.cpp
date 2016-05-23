@@ -104,14 +104,18 @@ void USBSerial::flush(void){
 }
 
 size_t USBSerial::write(const uint8_t *buffer, size_t size){
-  HAL_NVIC_DisableIRQ(USB_IRQn);
-  //HAL_NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
+  uint8_t i;
   if(hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED){
-    CDC_Transmit_FS((uint8_t*)buffer, size);
+    //HAL_NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
+    for(i=0;i<200;i++){
+      if(CDC_Transmit_FS((uint8_t*)buffer, size) == USBD_OK){
+         //HAL_NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
+         return size;
+      }
+    }
   }
-  HAL_NVIC_EnableIRQ(USB_IRQn);
   //HAL_NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
-  return 1;
+  return 0;
 }
 
 size_t USBSerial::write(uint8_t c) {

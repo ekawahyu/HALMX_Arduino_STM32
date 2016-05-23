@@ -14,6 +14,6 @@ void loop() {
   digitalWrite(LED1, LOW);  // turn the LED off by making the voltage LOW
   delay(768);              // wait for a second
   
-  mySerial.print("Hello USBSerial on Arduino\n");
+  mySerial.println("Hello USBSerial on Arduino");
   delay(100);
 }
