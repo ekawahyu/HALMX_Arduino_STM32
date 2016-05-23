@@ -106,12 +106,12 @@ typedef void (*voidFuncPtr)( void ) ;
 	These legacy defines are left here so that systems looking for 
 	Arduino CDC devices can find them.
 */
-#define USB_VID            0x2341 // arduino LLC vid
-#define USB_PID_LEONARDO   0x0034
-#define USB_PID_MICRO      0x0035
-#define USB_PID_DUE        0x003E
-#include "USB/USBDesc.h"
-#include "USB/USBCore.h"
-#include "USB/USBAPI.h"
+//#define USB_VID            0x2341 // arduino LLC vid
+//#define USB_PID_LEONARDO   0x0034
+//#define USB_PID_MICRO      0x0035
+//#define USB_PID_DUE        0x003E
+//#include "USB/USBDesc.h"
+//#include "USB/USBCore.h"
+//#include "USB/USBAPI.h"
 
 #endif // Arduino_h

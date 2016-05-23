@@ -93,7 +93,7 @@ class USBSerial : public Stream{
       volatile uint16_t iHead;
       volatile uint16_t iTail;
     };
-    ring_buffer rx_buffer = { { 0 }, 0, 0};
+    ring_buffer rx_buffer;// = { { 0 }, 0, 0};
     //ring_buffer tx_buffer = { { 0 }, 0, 0};
     GPIO_InitTypeDef GPIO_InitStruct;
 };

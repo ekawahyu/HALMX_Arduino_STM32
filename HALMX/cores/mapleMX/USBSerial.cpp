@@ -38,15 +38,15 @@ USBSerial::USBSerial(){
 }
 
 void USBSerial::init(void){
-  volatile unsigned int i;
-  GPIO_InitStruct.Pin = GPIO_PIN_12;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  //volatile unsigned int i;
+  //GPIO_InitStruct.Pin = GPIO_PIN_12;
+  //GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  //GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  //HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   /* Re-enumerate the USB */
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-	for(i=0;i<512;i++);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+	//for(i=0;i<512;i++);
+	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
   
   MX_USB_DEVICE_Init();
 }
@@ -104,11 +104,13 @@ void USBSerial::flush(void){
 }
 
 size_t USBSerial::write(const uint8_t *buffer, size_t size){
-  HAL_NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
+  HAL_NVIC_DisableIRQ(USB_IRQn);
+  //HAL_NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
   if(hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED){
     CDC_Transmit_FS((uint8_t*)buffer, size);
   }
-  HAL_NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
+  HAL_NVIC_EnableIRQ(USB_IRQn);
+  //HAL_NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
   return 1;
 }
 

@@ -35,6 +35,7 @@
 #include "usb_device.h"
 
 /* USER CODE BEGIN Includes */
+#include "variant.h"
 #define SYSMEM_RESET_VECTOR            0x1FFFC804
 #define RESET_TO_BOOTLOADER_MAGIC_CODE 0xDEADBEEF
 #define BOOTLOADER_STACK_POINTER       0x20002250
@@ -100,7 +101,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USB_DEVICE_Init();
+  //MX_USB_DEVICE_Init();
   MX_TIM3_Init();
   MX_ADC_Init();
   MX_USART1_UART_Init();
@@ -108,14 +109,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim3);
 
+#ifdef USE_USBSerial
+  StartUSBSerial(); //Start USBSerial.
+#endif
+
   /* No buffering, serial input/output occurs immediately */
   setvbuf(stdin,  NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
-
-  /* Increase delay time if you don't see any printf() happening on USB CDC ACM */
-  /* TODO Halt here until USB CDC ACM is ready */
-  //HAL_Delay(2000);
 
   setup();
   /* USER CODE END 2 */
@@ -128,9 +129,9 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     loop();
+    int key = getchar();
     //HAL_Delay(1000);
     //printf("Hello STM32 (%c)\n", (char)key);
-    int key = getchar();
     if (key == '1') dfu_run_bootloader();
   }
   /* USER CODE END 3 */

@@ -39,12 +39,30 @@
 
 #include <chip.h>
 
+#ifdef USE_USBSerial
+#include "usbd_cdc_if.h"
+#endif
+
 #define NO_ADC 0xFFFF
 
 #define NO_PWM 0xFFFF
 
+#include "Arduino.h"
+#ifdef __cplusplus
+#include "UARTClass.h"
+
+#ifdef USE_USBSerial
+#include <USBSerial.h>
+#endif
+
+#endif
+
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef USE_USBSerial
+extern USBD_HandleTypeDef hUsbDeviceFS;
 #endif
 
 enum {
@@ -85,6 +103,10 @@ typedef struct _Pin2PortMapArray
 
 /* Pins table to be instantiated into variant.cpp */
 extern const Pin2PortMapArray g_Pin2PortMapArray[];
+
+void USBSerial_Rx_Handler(uint8_t *data, uint16_t len); /* Vassilis Serasidis */
+void USBSerial_Tx_Handler(uint8_t *data, uint16_t len); /* Vassilis Serasidis */
+void StartUSBSerial(void);
 
 #ifdef __cplusplus
 }

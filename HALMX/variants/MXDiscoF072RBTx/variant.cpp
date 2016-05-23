@@ -34,7 +34,7 @@
  *
  */
 
-#include "variant.h"
+#include "Arduino.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -101,5 +101,21 @@ extern const Pin2PortMapArray g_Pin2PortMapArray[]=
 };
 
 #ifdef __cplusplus
+}
+#endif
+
+#ifdef USE_USBSerial
+USBSerial Serial;
+
+void USBSerial_Tx_Handler(uint8_t *data, uint16_t len){
+  Serial.CDC_TxHandler();
+}
+
+void USBSerial_Rx_Handler(uint8_t *data, uint16_t len){
+  Serial.CDC_RxHandler(data, len);
+}
+
+void StartUSBSerial (void){
+  Serial.begin(9600);
 }
 #endif
