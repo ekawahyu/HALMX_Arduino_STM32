@@ -5,6 +5,41 @@ menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
 
 ##############################################################
+NodinoF072LED.name=F072-LED
+
+NodinoF072LED.upload.file_type=bin
+NodinoF072LED.upload.flash.maximum_size=128k
+NodinoF072LED.upload.ram.maximum_size=20k
+
+NodinoF072LED.build.mcu=cortex-m0
+NodinoF072LED.build.f_cpu=48000000L
+NodinoF072LED.build.board=HALMX_NODINOF072LED
+NodinoF072LED.build.core=mapleMX
+NodinoF072LED.build.variant=NodinoF072LED
+
+NodinoF072LED.build.CMSISInc=STM32F0xx/Include
+NodinoF072LED.build.DRIVERS=STM32F0xx_HAL_Driver/Inc
+NodinoF072LED.build.common_flags=-mthumb -D__STM32F0__
+NodinoF072LED.build.extra_flags=-DSTM32F072xB
+NodinoF072LED.build.ldscript=SW4STM32/NodinoF072LED/STM32F072C8Tx_FLASH.ld
+
+NodinoF072LED.menu.upload_method.STLinkMethod=STLink
+NodinoF072LED.menu.upload_method.STLinkMethod.upload.protocol=STLink
+NodinoF072LED.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+
+NodinoF072LED.menu.upload_method.OpenOCDMethod=OpenOCD
+NodinoF072LED.menu.upload_method.OpenOCDMethod.upload.protocol=OpenOCD
+NodinoF072LED.menu.upload_method.OpenOCDMethod.upload.tool=openocd_upload
+NodinoF072LED.menu.upload_method.OpenOCDMethod.upload.interface=stlink-v2
+NodinoF072LED.menu.upload_method.OpenOCDMethod.upload.target=stm32f0x
+
+NodinoF072LED.menu.upload_method.DFUUploadMethod=STM32DFU
+NodinoF072LED.menu.upload_method.DFUUploadMethod.upload.protocol=STM32DFU
+NodinoF072LED.menu.upload_method.DFUUploadMethod.upload.tool=dfu_upload
+NodinoF072LED.menu.upload_method.DFUUploadMethod.upload.usbID=0483:df11
+NodinoF072LED.menu.upload_method.DFUUploadMethod.upload.altID=0
+
+##############################################################
 MXDiscoF072RBTx.name=STM32F072B-DISCO
 
 MXDiscoF072RBTx.upload.file_type=bin

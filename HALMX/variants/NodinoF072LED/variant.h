@@ -1,7 +1,7 @@
 /*
- * chip.h
+ * variant.h
  *
- * Created on: May 17, 2016
+ * Created on: May 24, 2016
  *     Author: Ekawahyu Susilo
  *
  * Copyright (c) 2016, Chongqing Aisenke Electronic Technology Co., Ltd.
@@ -34,35 +34,79 @@
  *
  */
 
-#ifndef INC_CHIP_STM32F072RB_H_
-#define INC_CHIP_STM32F072RB_H_
+#ifndef INC_VARIANT_H_
+#define INC_VARIANT_H_
 
-#include <stdbool.h>  /* for wiring constants */
+#include <chip.h>
 
-#include "stm32f0xx_hal.h"
+#ifdef USE_USBSerial
+#include "usbd_cdc_if.h"
+#endif
 
-#define USB_LP_CAN1_RX0_IRQn USB_IRQn
+#define NO_ADC 0xFFFF
 
-/* from STM boilerplate:
-      Systick timer is used by default as source of time base, but user
-            can eventually implement his proper time base source (a general purpose
-            timer for example or other time source), keeping in mind that Time base
-            duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and
-            handled in milliseconds basis.
+#define NO_PWM 0xFFFF
+
+#include "Arduino.h"
+#ifdef __cplusplus
+#include "UARTClass.h"
+
+#ifdef USE_USBSerial
+#include <USBSerial.h>
+#endif
+
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef USE_USBSerial
+extern USBD_HandleTypeDef hUsbDeviceFS;
+#endif
+
+enum {
+  PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PA8, PA9, PA10, PA11, PA12, PA13, PA14, PA15,
+  PB0, PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PB10, PB11, PB12, PB13, PB14, PB15,
+  PC13, PC14, PC15,
+  PF0, PF1
+};
+
+/*
+  This structure maps the high level settings of the port
+  See the HALMX core function variant and wiring_digital
+  to see how to use
 */
-/* returns System clock milliseconds HAL must be active */
-#define  millis(a1) HAL_GetTick(a1)
+typedef struct _Pin2PortMapArray
+{
+  /*
+    define the Abstract Hal port reference
 
-/* from STM boilerplate:
-      Care must be taken if HAL_Delay() is called from a
-             peripheral ISR process, the Tick interrupt line must have higher priority
-            (numerically lower) than the peripheral interrupt. Otherwise the caller
-            ISR process will be blocked.
-*/
-/* delay in micoseconds  Uses HAL system clock */
-#define delay(a2) HAL_Delay(a2)
+    IMPORTANT NOTE: this definition is opaque and
+    defined inside the chip family
+    do not try and change the include name locally
+    unless you know what you are doing
 
-#define CDC_SERIAL_BUFFER_SIZE  128
-#define USE_USBSerial
+  */
+    GPIO_TypeDef *GPIOx_Port;     /* defined in stm32f401xe.h */
+    /*
+      we only record the pin here as the typedef record
+      is normally mutable and only used by the init code
+    */
+    uint32_t  Pin_abstraction;  /* must match type in GPIO_InitTypeDef struct */
 
-#endif /* INC_CHIP_STM32F072RB_H_ */
+    uint32_t  adc_channel;
+    uint32_t  timerNumber;   //Timer1 to Timer4.
+    uint32_t  timerChannel;  //Timer channel (1-4).
+} Pin2PortMapArray;
+
+/* Pins table to be instantiated into variant.cpp */
+extern const Pin2PortMapArray g_Pin2PortMapArray[];
+
+void StartUSBSerial(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* INC_VARIANT_H_ */

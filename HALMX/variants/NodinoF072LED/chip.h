@@ -1,7 +1,7 @@
 /*
  * chip.h
  *
- * Created on: May 17, 2016
+ * Created on: May 24, 2016
  *     Author: Ekawahyu Susilo
  *
  * Copyright (c) 2016, Chongqing Aisenke Electronic Technology Co., Ltd.
@@ -34,8 +34,8 @@
  *
  */
 
-#ifndef INC_CHIP_STM32F072RB_H_
-#define INC_CHIP_STM32F072RB_H_
+#ifndef INC_CHIP_STM32F072C8_H_
+#define INC_CHIP_STM32F072C8_H_
 
 #include <stdbool.h>  /* for wiring constants */
 
@@ -65,4 +65,4 @@
 #define CDC_SERIAL_BUFFER_SIZE  128
 #define USE_USBSerial
 
-#endif /* INC_CHIP_STM32F072RB_H_ */
+#endif /* INC_CHIP_STM32F072C8_H_ */
