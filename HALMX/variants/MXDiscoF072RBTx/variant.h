@@ -104,8 +104,6 @@ typedef struct _Pin2PortMapArray
 /* Pins table to be instantiated into variant.cpp */
 extern const Pin2PortMapArray g_Pin2PortMapArray[];
 
-void USBSerial_Rx_Handler(uint8_t *data, uint16_t len); /* Vassilis Serasidis */
-void USBSerial_Tx_Handler(uint8_t *data, uint16_t len); /* Vassilis Serasidis */
 void StartUSBSerial(void);
 
 #ifdef __cplusplus

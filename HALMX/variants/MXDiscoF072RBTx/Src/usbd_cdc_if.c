@@ -126,6 +126,7 @@ static int8_t CDC_Control_FS  (uint8_t cmd, uint8_t* pbuf, uint16_t length);
 static int8_t CDC_Receive_FS  (uint8_t* pbuf, uint32_t *Len);
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
+void dfu_run_bootloader(void);
 /* USER CODE END PRIVATE_FUNCTIONS_DECLARATION */
 
 /**
@@ -264,9 +265,20 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
   uint32_t i;
+  static unsigned char passkey[] = "@boot";
+  static unsigned char passkey_index = 0;
 
   for (i = 0; i < *Len; i++) {
     UserRxBufferFS[UserRxBufPtrIn] = *(Buf + i);
+
+    /* reading buffer for a sequential bytes that form a pass key */
+    if (UserRxBufferFS[UserRxBufPtrIn] == passkey[passkey_index])
+      passkey_index++;
+    else
+      passkey_index = 0;
+    /* jump to DFU mode when the pass key found */
+    if (passkey_index == 5) dfu_run_bootloader();
+
     UserRxBufPtrIn++;
     if (UserRxBufPtrIn == APP_RX_DATA_SIZE)
       UserRxBufPtrIn = 0;

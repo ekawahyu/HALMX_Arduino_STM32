@@ -38,15 +38,15 @@ USBSerial::USBSerial(){
 }
 
 void USBSerial::init(void){
-  //volatile unsigned int i;
-  //GPIO_InitStruct.Pin = GPIO_PIN_12;
-  //GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  //GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  //HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  volatile unsigned int i;
+  GPIO_InitStruct.Pin = GPIO_PIN_12;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   /* Re-enumerate the USB */
-	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-	//for(i=0;i<512;i++);
-	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+	for(i=0;i<512;i++);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
   
   MX_USB_DEVICE_Init();
 }
@@ -124,13 +124,13 @@ size_t USBSerial::write(uint8_t c) {
 
 void USBSerial::CDC_RxHandler (uint8_t* Buf, uint16_t Len){
 
-  for(uint16_t i=0;i<Len;i++){
+/*  for(uint16_t i=0;i<Len;i++){
     if(available() < (CDC_SERIAL_BUFFER_SIZE - 1)){
       rx_buffer.buffer[rx_buffer.iHead] = *Buf++;
       rx_buffer.iHead = (uint16_t)(rx_buffer.iHead + 1) % CDC_SERIAL_BUFFER_SIZE;
     }else
       break;
-  }
+  } */
 }
 
 void USBSerial::CDC_TxHandler(void){

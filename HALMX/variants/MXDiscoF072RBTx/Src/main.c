@@ -102,12 +102,12 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   //MX_USB_DEVICE_Init();
-  MX_TIM3_Init();
+  //MX_TIM3_Init();
   MX_ADC_Init();
   MX_USART1_UART_Init();
 
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim3);
+  //HAL_TIM_Base_Start_IT(&htim3);
 
 #ifdef USE_USBSerial
   StartUSBSerial(); //Start USBSerial.
@@ -129,10 +129,6 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     loop();
-    int key = getchar();
-    //HAL_Delay(1000);
-    //printf("Hello STM32 (%c)\n", (char)key);
-    if (key == '1') dfu_run_bootloader();
   }
   /* USER CODE END 3 */
 
