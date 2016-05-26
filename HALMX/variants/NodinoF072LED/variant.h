@@ -109,4 +109,37 @@ void StartUSBSerial(void);
 }
 #endif
 
+/*----------------------------------------------------------------------------
+ *        Arduino objects - C++ only
+ *----------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+
+#ifdef USE_USART1
+extern UARTClass Serial1;
+#endif
+
+#ifdef USE_USART2
+extern UARTClass Serial2;
+#endif
+
+#ifdef USE_USART3
+extern UARTClass Serial3;
+#endif
+
+#ifdef USE_USBSerial
+extern USBSerial Serial;
+#endif
+
+#endif
+
+#define SERIAL_PORT_MONITOR         Serial
+#define SERIAL_PORT_USBVIRTUAL      SerialUSB
+#define SERIAL_PORT_HARDWARE_OPEN   Serial1
+#define SERIAL_PORT_HARDWARE_OPEN1  Serial2
+#define SERIAL_PORT_HARDWARE_OPEN2  Serial3
+#define SERIAL_PORT_HARDWARE        Serial
+#define SERIAL_PORT_HARDWARE1       Serial1
+#define SERIAL_PORT_HARDWARE2       Serial2
+
 #endif /* INC_VARIANT_H_ */

@@ -3,23 +3,23 @@ OPENOCD_HOME=/opt/local
 COPY=cp
 
 # put your *.o targets here, make should handle the rest!
-SRCS = main.c system_stm32f0xx.c syscalls.c
+SRCS = main.c system_stm32f0xx.c
 SRCS += stm32f0xx_hal_msp.c stm32f0xx_it.c
 SRCS += usbd_cdc_if.c usbd_conf.c usbd_desc.c usb_device.c
-SRCS += wiring.c wiring_digital.c
-CXXSRCS = variant.cpp sketch.cpp
+SRCS += itoa.c syscalls.c wiring_analog.c wiring_digital.c wiring_shift.c wiring.c
+CXXSRCS = new.cpp Print.cpp RingBuffer.cpp Stream.cpp UARTClass.cpp USARTClass.cpp
+CXXSRCS += USBSerial.cpp WMath.cpp WString.cpp
+CXXSRCS += variant.cpp sketch.cpp
 
 # all the files will be generated with this name (main.elf, main.bin, main.hex, etc)
 PROJ_NAME=main
 
-# Location of the STM32F0xx HAL Drivers
-HAL_DRIVER=Drivers
-
-# Location of the STM32F0xx USB Device Library
-MIDDLEWARE=Middlewares/ST
+# Location of the STM32F0xx HAL Drivers and STM32F0xx USB Device Library
+DRIVER=../../drivers
 
 # Location of the linker scripts
-LDSCRIPT_INC=scripts
+LDSCRIPT_INC=SW4STM32/MXDiscoF072RBTx
+LINKER=STM32F072RBTx_FLASH.ld
 
 # location of OpenOCD Board .cfg files (only used with 'make program')
 OPENOCD_BOARD_DIR=$(OPENOCD_HOME)/scripts/board
@@ -39,7 +39,7 @@ OBJCOPY=$(ARM_NONE_EABI_BIN)/arm-none-eabi-objcopy
 OBJDUMP=$(ARM_NONE_EABI_BIN)/arm-none-eabi-objdump
 SIZE=$(ARM_NONE_EABI_BIN)/arm-none-eabi-size
 
-CFLAGS  = -Wall -g -O2 -D__STRICT_ANSI__
+CFLAGS  = -Wall -g -Os -D__STRICT_ANSI__
 CFLAGS += -mlittle-endian -mcpu=cortex-m0  -march=armv6-m -mthumb
 CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += -Wl,--gc-sections -Wl,-Map=$(PROJ_NAME).map
@@ -52,19 +52,19 @@ CXXFLAGS = -fno-rtti -fno-exceptions
 
 ###################################################
 
-vpath %.c $(HAL_DRIVER)/CMSIS/Device/ST/STM32F0xx/Source/Templates
+vpath %.c $(DRIVER)/CMSIS/Device/ST/STM32F0xx/Source/Templates
 vpath %.c Src ../../cores/mapleMX
 vpath %.cpp Src ../../cores/mapleMX
-vpath %.s Src
-vpath %.a $(HAL_DRIVER)
+vpath %.s $(DRIVER)/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc
+vpath %.a $(DRIVER)
 
 ROOT=$(shell pwd)
 
-CFLAGS += -I. -IInc -I$(HAL_DRIVER) -I$(HAL_DRIVER)/CMSIS/Device/ST/STM32F0xx/Include
-CFLAGS += -I$(HAL_DRIVER)/CMSIS/Include -I$(HAL_DRIVER)/STM32F0xx_HAL_Driver/Inc
+CFLAGS += -I. -IInc -I$(DRIVER) -I$(DRIVER)/CMSIS/Device/ST/STM32F0xx/Include
+CFLAGS += -I$(DRIVER)/CMSIS/Include -I$(DRIVER)/STM32F0xx_HAL_Driver/Inc
 CFLAGS += -includeInc/stm32f0xx_hal_conf.h
-CFLAGS += -I$(MIDDLEWARE)/STM32_USB_Device_Library/Core/Inc
-CFLAGS += -I$(MIDDLEWARE)/STM32_USB_Device_Library/Class/CDC/Inc
+CFLAGS += -I$(DRIVER)/STM32_USB_Device_Library/Core/Inc
+CFLAGS += -I$(DRIVER)/STM32_USB_Device_Library/Class/CDC/Inc
 CFLAGS += -I../../cores/mapleMX
 
 ASMSRCS += startup_stm32f072xb.s ############ need to move/define this somewhere else
@@ -78,12 +78,12 @@ OBJS = $(SRCS:.c=.o) $(ASMSRCS:.s=.o) $(CXXSRCS:.cpp=.o)
 all: lib proj
 
 lib:
-	$(MAKE) -C $(HAL_DRIVER)
+	$(MAKE) -C $(DRIVER)
 
 proj: $(PROJ_NAME).elf
 
 $(PROJ_NAME).elf: $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ -L$(HAL_DRIVER) -lstm32f0 -L$(LDSCRIPT_INC) -TSTM32F072RB_FLASH.ld
+	$(CC) $(CFLAGS) -o $@ $^ -L$(DRIVER) -lstm32f0 -L$(LDSCRIPT_INC) -T$(LINKER)
 	$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
 	$(OBJDUMP) -St $(PROJ_NAME).elf >$(PROJ_NAME).lst
@@ -115,4 +115,4 @@ clean:
 	rm -f ../../$(PROJ_NAME).bin
 
 distclean: clean
-	$(MAKE) -C $(HAL_DRIVER) clean
+	$(MAKE) -C $(DRIVER) clean

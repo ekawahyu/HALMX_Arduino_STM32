@@ -1,11 +1,10 @@
 #define LED1  PC6
 
-USBSerial mySerial;
 int dataIn;
 
 void setup() {
   pinMode(LED1, OUTPUT);
-  mySerial.begin(9600); // baudrate is not actually used
+  Serial.begin(9600); // baudrate is not actually used
 }
 
 void loop() {
@@ -14,6 +13,8 @@ void loop() {
   digitalWrite(LED1, LOW);  // turn the LED off by making the voltage LOW
   delay(768);              // wait for a second
   
-  mySerial.println("Hello USBSerial on Arduino");
+  Serial.println("Hello USBSerial on Arduino");
   delay(100);
+  dataIn = Serial.read();
+  Serial.println(dataIn, DEC);
 }
