@@ -289,8 +289,8 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
     if (UserRxBufPtrIn == APP_RX_DATA_SIZE)
       UserRxBufPtrIn = 0;
 
-    //if (UserRxBufPtrIn == UserRxBufPtrOut)
-    //  return (USBD_FAIL);
+    if (UserRxBufPtrIn == UserRxBufPtrOut)
+      return (USBD_FAIL);
   }
 
   }
