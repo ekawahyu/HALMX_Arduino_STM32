@@ -15,8 +15,6 @@ void loop() {
   digitalWrite(LED1, LOW);  // turn the LED off by making the voltage LOW
   //delay(10);              // wait for a second
   
-  //Serial.println("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVW");
-  //delay(2);
   dataIn = Serial.read();
   if (dataIn >= 0) Serial.write(dataIn);
 }
