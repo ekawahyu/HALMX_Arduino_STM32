@@ -12,7 +12,7 @@ dummy_port=$1; altID=$2; usbID=$3; binfile=$4;dummy_port_fullpath="/dev/$1"
 
 if [ -e $dummy_port_fullpath ]; then
 	echo "resetting " $dummy_port_fullpath
-	echo “@boot” > $dummy_port_fullpath
+	echo “1EAF” > $dummy_port_fullpath
 	sleep 1
 fi
 

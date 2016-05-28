@@ -268,7 +268,7 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
   uint32_t i;
-  static unsigned char passkey[] = "@boot";
+  static unsigned char passkey[] = "1EAF";
   static unsigned char passkey_index = 0;
 
   if (!UserRxBufLock) {
@@ -282,7 +282,7 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
     else
       passkey_index = 0;
     /* jump to DFU mode when the pass key found */
-    if (passkey_index == 5) dfu_run_bootloader();
+    if (passkey_index == 4) dfu_run_bootloader();
 
     UserRxBufPtrIn++;
 
