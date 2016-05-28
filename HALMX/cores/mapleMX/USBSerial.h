@@ -89,12 +89,13 @@ class USBSerial : public Stream{
   protected:
     void init(void);
     struct ring_buffer{
-      uint8_t buffer[CDC_SERIAL_BUFFER_SIZE];
-      volatile uint16_t iHead;
-      volatile uint16_t iTail;
+      //uint8_t buffer[CDC_SERIAL_BUFFER_SIZE];
+      uint8_t *buffer;
+      volatile uint32_t *iHead;
+      volatile uint32_t *iTail;
     };
     ring_buffer rx_buffer;// = { { 0 }, 0, 0};
-    //ring_buffer tx_buffer = { { 0 }, 0, 0};
+    ring_buffer tx_buffer;// = { { 0 }, 0, 0};
     GPIO_InitTypeDef GPIO_InitStruct;
 };
 

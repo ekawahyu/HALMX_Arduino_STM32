@@ -33,6 +33,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_if.h"
 /* USER CODE BEGIN INCLUDE */
+#include "chip.h"
 /* USER CODE END INCLUDE */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -59,8 +60,8 @@
 /* USER CODE BEGIN PRIVATE_DEFINES */
 /* Define size for the receive and transmit buffer over CDC */
 /* It's up to user to redefine and/or remove those define */
-#define APP_RX_DATA_SIZE  128
-#define APP_TX_DATA_SIZE  128
+//#define APP_RX_DATA_SIZE  128
+//#define APP_TX_DATA_SIZE  128
 /* USER CODE END PRIVATE_DEFINES */
 /**
   * @}
@@ -100,7 +101,8 @@ uint32_t UserRxBufPtrIn = 0;/* Increment this pointer or roll it back to
                                start address when data are received over USB */
 uint32_t UserRxBufPtrOut = 0; /* Increment this pointer or roll it back to
                                  start address when data are sent over UART */
-
+uint8_t UserTxBufLock = 0;
+uint8_t UserRxBufLock = 0;
 /* USER CODE END PRIVATE_VARIABLES */
 
 /**
@@ -269,6 +271,8 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
   static unsigned char passkey[] = "@boot";
   static unsigned char passkey_index = 0;
 
+  if (!UserRxBufLock) {
+
   for (i = 0; i < *Len; i++) {
     UserRxBufferFS[UserRxBufPtrIn] = *(Buf + i);
 
@@ -281,11 +285,14 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
     if (passkey_index == 5) dfu_run_bootloader();
 
     UserRxBufPtrIn++;
+
     if (UserRxBufPtrIn == APP_RX_DATA_SIZE)
       UserRxBufPtrIn = 0;
 
-    if (UserRxBufPtrIn == UserRxBufPtrOut)
-      return (USBD_FAIL);
+    //if (UserRxBufPtrIn == UserRxBufPtrOut)
+    //  return (USBD_FAIL);
+  }
+
   }
 
   USBD_CDC_SetRxBuffer(hUsbDevice_0, &Buf[0]);
@@ -322,15 +329,18 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
 int __io_putchar(int buf)
 {
+  UserTxBufLock = 1;
+
   /* Increment Index for buffer writing */
-  UserTxBufferFS[UserTxBufPtrIn] = (uint8_t)buf;
-  UserTxBufPtrIn++;
+  UserTxBufferFS[UserTxBufPtrIn++] = (uint8_t)buf;
 
   /* To avoid buffer overflow */
   if(UserTxBufPtrIn == APP_TX_DATA_SIZE)
   {
     UserTxBufPtrIn = 0;
   }
+
+  UserTxBufLock = 0;
 
   return 0;
 }
@@ -339,15 +349,56 @@ int __io_getchar(void)
 {
   int ret;
 
-  if (UserRxBufPtrIn == UserRxBufPtrOut)
-    return -1;
+  UserRxBufLock = 1;
 
-  ret = UserRxBufferFS[UserRxBufPtrOut];
-  UserRxBufPtrOut++;
+  if (UserRxBufPtrIn == UserRxBufPtrOut) {
+    UserRxBufLock = 0;
+    return -1;
+  }
+
+  ret = UserRxBufferFS[UserRxBufPtrOut++];
+
   if (UserRxBufPtrOut == APP_RX_DATA_SIZE)
     UserRxBufPtrOut = 0;
 
+  UserRxBufLock = 0;
+
   return ret;
+}
+
+void HAL_SYSTICK_Callback(void)
+{
+  static uint8_t ms_counter = 20;
+  uint32_t buffptr;
+  uint32_t buffsize;
+
+  if (ms_counter--) return;
+  ms_counter = 20;
+
+  if ((UserTxBufPtrOut != UserTxBufPtrIn) && !UserTxBufLock)
+  {
+    if (UserTxBufPtrOut > UserTxBufPtrIn) /* rollback */
+    {
+      buffsize = APP_RX_DATA_SIZE - UserTxBufPtrOut;
+    }
+    else
+    {
+      buffsize = UserTxBufPtrIn - UserTxBufPtrOut;
+    }
+
+    buffptr = UserTxBufPtrOut;
+
+    USBD_CDC_SetTxBuffer(hUsbDevice_0, (uint8_t*)&UserTxBufferFS[buffptr], buffsize);
+
+    if (USBD_CDC_TransmitPacket(hUsbDevice_0) == USBD_OK)
+    {
+      UserTxBufPtrOut += buffsize;
+      if (UserTxBufPtrOut == APP_RX_DATA_SIZE)
+      {
+        UserTxBufPtrOut = 0;
+      }
+    }
+  }
 }
 /* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */
 

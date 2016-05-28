@@ -9,7 +9,8 @@ SRCS += usbd_cdc_if.c usbd_conf.c usbd_desc.c usb_device.c
 SRCS += itoa.c syscalls.c wiring_analog.c wiring_digital.c wiring_shift.c wiring.c
 CXXSRCS = new.cpp Print.cpp RingBuffer.cpp Stream.cpp UARTClass.cpp USARTClass.cpp
 CXXSRCS += USBSerial.cpp WMath.cpp WString.cpp
-CXXSRCS += variant.cpp sketch.cpp
+CXXSRCS += variant.cpp
+INOSRCS = USBSerial_example.ino
 
 # all the files will be generated with this name (main.elf, main.bin, main.hex, etc)
 PROJ_NAME=main
@@ -57,6 +58,7 @@ vpath %.c Src ../../cores/mapleMX
 vpath %.cpp Src ../../cores/mapleMX
 vpath %.s $(DRIVER)/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc
 vpath %.a $(DRIVER)
+vpath %.ino ../../../examples/Communications/USBSerial_example
 
 ROOT=$(shell pwd)
 
@@ -69,7 +71,7 @@ CFLAGS += -I../../cores/mapleMX
 
 ASMSRCS += startup_stm32f072xb.s ############ need to move/define this somewhere else
 
-OBJS = $(SRCS:.c=.o) $(ASMSRCS:.s=.o) $(CXXSRCS:.cpp=.o)
+OBJS = $(SRCS:.c=.o) $(ASMSRCS:.s=.o) $(CXXSRCS:.cpp=.o) $(INOSRCS:.ino=.o)
 
 ###################################################
 
@@ -90,6 +92,10 @@ $(PROJ_NAME).elf: $(OBJS)
 	$(SIZE) $(PROJ_NAME).elf
 	$(COPY) $(PROJ_NAME).elf ../..
 	$(COPY) $(PROJ_NAME).bin ../..
+
+%.o: %.ino
+	$(COPY) $< $<.cpp
+	$(CXX) $(CFLAGS) $(CXXFLAGS) -c $<.cpp -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

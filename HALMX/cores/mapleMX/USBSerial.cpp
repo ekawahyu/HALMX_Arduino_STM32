@@ -33,8 +33,14 @@
 // Constructors ////////////////////////////////////////////////////////////////
 USBSerial::USBSerial(){
   // Make sure Rx ring buffer is initialized back to empty.
-  rx_buffer.iHead = rx_buffer.iTail = 0;
+  //rx_buffer.iHead = rx_buffer.iTail = 0;
   //tx_buffer.iHead = tx_buffer.iTail = 0;
+  rx_buffer.iHead = &UserRxBufPtrIn;
+  rx_buffer.iTail = &UserRxBufPtrOut;
+  rx_buffer.buffer = UserRxBufferFS;
+  tx_buffer.iHead = &UserTxBufPtrIn;
+  tx_buffer.iTail = &UserTxBufPtrOut;
+  tx_buffer.buffer = UserTxBufferFS;
 }
 
 void USBSerial::init(void){
@@ -76,45 +82,33 @@ int USBSerial::availableForWrite(void){
 
 
 int USBSerial::available(void){
-  return (uint32_t)(CDC_SERIAL_BUFFER_SIZE + rx_buffer.iHead - rx_buffer.iTail) % CDC_SERIAL_BUFFER_SIZE;
+  return (uint32_t)(CDC_SERIAL_BUFFER_SIZE + *rx_buffer.iHead - *rx_buffer.iTail) % CDC_SERIAL_BUFFER_SIZE;
 }
 
 int USBSerial::peek(void)
 {
-  if ( rx_buffer.iHead == rx_buffer.iTail )
+  if ( *rx_buffer.iHead == *rx_buffer.iTail )
     return -1;
 
-  return rx_buffer.buffer[rx_buffer.iTail];
+  return rx_buffer.buffer[*rx_buffer.iTail];
 }
 
 int USBSerial::read(void)
 {
-  // if the head isn't ahead of the tail, we don't have any characters
-  if ( rx_buffer.iHead == rx_buffer.iTail )
-    return -1;
-
-  uint8_t uc = rx_buffer.buffer[rx_buffer.iTail];
-  rx_buffer.iTail = (unsigned int)(rx_buffer.iTail + 1) % CDC_SERIAL_BUFFER_SIZE;
-  
-  return uc;
+  return __io_getchar();
 }
 
 void USBSerial::flush(void){
   //It's not implemented yet.
 }
 
-size_t USBSerial::write(const uint8_t *buffer, size_t size){
-  uint8_t i;
+size_t USBSerial::write(const uint8_t *buffer, size_t size)
+{
   if(hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED){
-    //HAL_NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
-    for(i=0;i<200;i++){
-      if(CDC_Transmit_FS((uint8_t*)buffer, size) == USBD_OK){
-         //HAL_NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
-         return size;
-      }
-    }
+    while(size-- > 0)
+      __io_putchar(*buffer++);
   }
-  //HAL_NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
+
   return 0;
 }
 
