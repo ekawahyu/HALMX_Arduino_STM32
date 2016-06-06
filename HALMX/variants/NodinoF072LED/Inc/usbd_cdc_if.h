@@ -40,6 +40,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc.h"
 /* USER CODE BEGIN INCLUDE */
+#include "chip.h"
 /* USER CODE END INCLUDE */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -55,6 +56,8 @@
   * @{
   */ 
 /* USER CODE BEGIN EXPORTED_DEFINES */
+#define APP_RX_DATA_SIZE  CDC_SERIAL_BUFFER_SIZE
+#define APP_TX_DATA_SIZE  CDC_SERIAL_BUFFER_SIZE
 /* USER CODE END EXPORTED_DEFINES */
 
 /**
@@ -87,6 +90,12 @@
 extern USBD_CDC_ItfTypeDef  USBD_Interface_fops_FS;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
+extern uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
+extern uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
+extern uint32_t UserRxBufPtrIn;
+extern uint32_t UserRxBufPtrOut;
+extern uint32_t UserTxBufPtrIn;
+extern uint32_t UserTxBufPtrOut;
 /* USER CODE END EXPORTED_VARIABLES */
 
 /**
@@ -99,6 +108,8 @@ extern USBD_CDC_ItfTypeDef  USBD_Interface_fops_FS;
 uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 
 /* USER CODE BEGIN EXPORTED_FUNCTIONS */
+int __io_putchar(int buf);
+int __io_getchar(void);
 /* USER CODE END EXPORTED_FUNCTIONS */
 /**
   * @}
