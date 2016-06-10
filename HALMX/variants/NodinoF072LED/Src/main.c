@@ -51,8 +51,43 @@ UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
+#define LED1_PIN    GPIO_PIN_15
+#define LED2_PIN    GPIO_PIN_2
+#define LED3_PIN    GPIO_PIN_5
+#define LED4_PIN    GPIO_PIN_4
+#define LED5_PIN    GPIO_PIN_9
+#define LED6_PIN    GPIO_PIN_8
+#define LED7_PIN    GPIO_PIN_3
+#define LED8_PIN    GPIO_PIN_15
+
+#define LED1_GPIO   GPIOB
+#define LED2_GPIO   GPIOB
+#define LED3_GPIO   GPIOA
+#define LED4_GPIO   GPIOA
+#define LED5_GPIO   GPIOB
+#define LED6_GPIO   GPIOB
+#define LED7_GPIO   GPIOB
+#define LED8_GPIO   GPIOA
+
+/* Size of Trasmission buffer */
+#define TXBUFFERSIZE                      (COUNTOF(aTxBuffer) - 1)
+/* Size of Reception buffer */
+#define RXBUFFERSIZE                      TXBUFFERSIZE
+/* Exported macro ------------------------------------------------------------*/
+#define COUNTOF(__BUFFER__)   (sizeof(__BUFFER__) / sizeof(*(__BUFFER__)))
+
 /* Private variables ---------------------------------------------------------*/
 uint32_t dfu_reset_to_bootloader_magic;
+
+__IO ITStatus UartReady = RESET;
+
+/* Buffer used for transmission */
+uint8_t aTxBuffer[] = " ****UART_TwoBoards_ComIT**** ";
+
+/* Buffer used for reception */
+uint8_t aRxBuffer[RXBUFFERSIZE];
+
+static uint16_t Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,6 +106,62 @@ static void MX_USART4_UART_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+/**
+  * @brief  Tx Transfer completed callback
+  * @param  UartHandle: UART handle.
+  * @note   This example shows a simple way to report end of IT Tx transfer, and
+  *         you can add your own implementation.
+  * @retval None
+  */
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
+{
+  uint32_t count = 100000;
+  /* Set transmission flag: trasfer complete*/
+  UartReady = SET;
+  HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_SET);
+  while(count--);
+  HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_RESET);
+}
+
+/**
+  * @brief  Rx Transfer completed callback
+  * @param  UartHandle: UART handle
+  * @note   This example shows a simple way to report end of DMA Rx transfer, and
+  *         you can add your own implementation.
+  * @retval None
+  */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
+{
+  uint32_t count = 100000;
+  /* Set transmission flag: trasfer complete*/
+  UartReady = SET;
+  HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_SET);
+  while(count--);
+  HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_RESET);
+}
+
+/**
+  * @brief  Compares two buffers.
+  * @param  pBuffer1, pBuffer2: buffers to be compared.
+  * @param  BufferLength: buffer's length
+  * @retval 0  : pBuffer1 identical to pBuffer2
+  *         >0 : pBuffer1 differs from pBuffer2
+  */
+static uint16_t Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength)
+{
+  while (BufferLength--)
+  {
+    if ((*pBuffer1) != *pBuffer2)
+    {
+      return BufferLength;
+    }
+    pBuffer1++;
+    pBuffer2++;
+  }
+
+  return 0;
+}
+
 void __initialize_hardware_early(void)
 {
   if (dfu_reset_to_bootloader_magic == RESET_TO_BOOTLOADER_MAGIC_CODE) {
@@ -93,7 +184,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+  uint32_t count;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -109,8 +200,8 @@ int main(void)
   //MX_ADC_Init();
   //MX_TIM3_Init();
   MX_USART1_UART_Init();
-  MX_USART3_UART_Init();
-  MX_USART4_UART_Init();
+  //MX_USART3_UART_Init();
+  //MX_USART4_UART_Init();
   //MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
@@ -135,6 +226,80 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     loop();
+
+#if 0 //(1 = Sender, 0 = Receiver)
+
+  HAL_Delay(1000);
+
+  /* The board sends the message and expects to receive it back */
+
+  if(HAL_UART_Transmit_IT(&huart1, (uint8_t*)aTxBuffer, TXBUFFERSIZE)!= HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /*##-3- Wait for the end of the transfer ###################################*/
+  while (UartReady != SET);
+
+  /* Reset transmission flag */
+  UartReady = RESET;
+
+  /*##-4- Put UART peripheral in reception process ###########################*/
+  if(HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer, RXBUFFERSIZE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+#else
+
+  /* The board receives the message and sends it back */
+
+  /*##-2- Put UART peripheral in reception process ###########################*/
+  if(HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer, RXBUFFERSIZE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /*##-3- Wait for the end of the transfer ###################################*/
+  /* While waiting for message to come from the other board, LED4 is
+     blinking according to the following pattern: a double flash every half-second */
+  while (UartReady != SET);
+
+  /* Reset transmission flag */
+  UartReady = RESET;
+
+  HAL_Delay(1000);
+
+  /*##-4- Start the transmission process #####################################*/
+  /* While the UART in reception process, user can transmit data through
+     "aTxBuffer" buffer */
+  if(HAL_UART_Transmit_IT(&huart1, (uint8_t*)aTxBuffer, TXBUFFERSIZE)!= HAL_OK)
+  {
+    Error_Handler();
+  }
+
+#endif /* TRANSMITTER_BOARD */
+
+
+  /*##-5- Wait for the end of the transfer ###################################*/
+  while (UartReady != SET)
+  {
+  }
+
+  /* Reset transmission flag */
+  UartReady = RESET;
+
+  /*##-6- Compare the sent and received buffers ##############################*/
+  if(Buffercmp((uint8_t*)aTxBuffer,(uint8_t*)aRxBuffer,RXBUFFERSIZE))
+  {
+    count = 100000;
+    HAL_GPIO_WritePin(LED3_GPIO, LED3_PIN, GPIO_PIN_SET);
+    while(count--);
+    HAL_GPIO_WritePin(LED3_GPIO, LED3_PIN, GPIO_PIN_RESET);
+  }
+
+  HAL_Delay(1000);
+
   }
   /* USER CODE END 3 */
 
@@ -268,8 +433,8 @@ static void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 38400;
-  huart1.Init.WordLength = UART_WORDLENGTH_7B;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
   huart1.Init.Mode = UART_MODE_TX_RX;
@@ -289,8 +454,8 @@ static void MX_USART3_UART_Init(void)
 {
 
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 38400;
-  huart3.Init.WordLength = UART_WORDLENGTH_7B;
+  huart3.Init.BaudRate = 1200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;
   huart3.Init.Mode = UART_MODE_TX_RX;
@@ -310,8 +475,8 @@ static void MX_USART4_UART_Init(void)
 {
 
   huart4.Instance = USART4;
-  huart4.Init.BaudRate = 38400;
-  huart4.Init.WordLength = UART_WORDLENGTH_7B;
+  huart4.Init.BaudRate = 1200;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
   huart4.Init.StopBits = UART_STOPBITS_1;
   huart4.Init.Parity = UART_PARITY_NONE;
   huart4.Init.Mode = UART_MODE_TX_RX;

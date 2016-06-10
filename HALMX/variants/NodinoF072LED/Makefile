@@ -19,8 +19,8 @@ PROJ_NAME=main
 DRIVER=../../drivers
 
 # Location of the linker scripts
-LDSCRIPT_INC=SW4STM32/MXDiscoF072RBTx
-LINKER=STM32F072RBTx_FLASH.ld
+LDSCRIPT_INC=SW4STM32/NodinoF072LED
+LINKER=STM32F072C8Tx_FLASH.ld
 
 # location of OpenOCD Board .cfg files (only used with 'make program')
 OPENOCD_BOARD_DIR=$(OPENOCD_HOME)/scripts/board
