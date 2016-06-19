@@ -82,7 +82,7 @@ uint32_t dfu_reset_to_bootloader_magic;
 __IO ITStatus UartReady = RESET;
 
 /* Buffer used for transmission */
-uint8_t aTxBuffer[] = "!****UART_TwoBoards_ComIT****!";
+uint8_t aTxBuffer[] = "!****UART_TwoBoards_ComIT****@";
 
 /* Buffer used for reception */
 uint8_t aRxBuffer[RXBUFFERSIZE];
@@ -233,10 +233,19 @@ int main(void)
 
   /* The board sends the message and expects to receive it back */
 
+  if (HAL_HalfDuplex_EnableTransmitter(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
   if(HAL_UART_Transmit_IT(&huart1, (uint8_t*)aTxBuffer, TXBUFFERSIZE)!= HAL_OK)
   {
     Error_Handler();
   }
+
+  printf("TxBuffer = ");
+  for (int i = 0; i <= TXBUFFERSIZE; i++) printf("%c", aTxBuffer[i]);
+  printf("\n");
 
   /*##-3- Wait for the end of the transfer ###################################*/
   while (UartReady != SET);
@@ -244,21 +253,39 @@ int main(void)
   /* Reset transmission flag */
   UartReady = RESET;
 
+  if (HAL_HalfDuplex_EnableReceiver(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
   /*##-4- Put UART peripheral in reception process ###########################*/
   if(HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer, RXBUFFERSIZE) != HAL_OK)
   {
     Error_Handler();
   }
 
+  printf("RxBuffer = ");
+  for (int i = 0; i <= RXBUFFERSIZE; i++) printf("%c", aRxBuffer[i]);
+  printf("\n");
+
 #else
 
   /* The board receives the message and sends it back */
+
+   if (HAL_HalfDuplex_EnableReceiver(&huart1) != HAL_OK)
+   {
+     Error_Handler();
+   }
 
   /*##-2- Put UART peripheral in reception process ###########################*/
   if(HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer, RXBUFFERSIZE) != HAL_OK)
   {
     Error_Handler();
   }
+
+  printf("RxBuffer = ");
+  for (int i = 0; i <= RXBUFFERSIZE; i++) printf("%c", aRxBuffer[i]);
+  printf("\n");
 
   /*##-3- Wait for the end of the transfer ###################################*/
   /* While waiting for message to come from the other board, LED4 is
@@ -270,6 +297,11 @@ int main(void)
 
   HAL_Delay(1000);
 
+  if (HAL_HalfDuplex_EnableTransmitter(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
   /*##-4- Start the transmission process #####################################*/
   /* While the UART in reception process, user can transmit data through
      "aTxBuffer" buffer */
@@ -278,7 +310,9 @@ int main(void)
     Error_Handler();
   }
 
+  printf("TxBuffer = ");
   for (int i = 0; i <= TXBUFFERSIZE; i++) printf("%c", aTxBuffer[i]);
+  printf("\n");
 
 #endif /* TRANSMITTER_BOARD */
 
