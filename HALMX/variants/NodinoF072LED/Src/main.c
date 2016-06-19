@@ -82,7 +82,7 @@ uint32_t dfu_reset_to_bootloader_magic;
 __IO ITStatus UartReady = RESET;
 
 /* Buffer used for transmission */
-uint8_t aTxBuffer[] = " ****UART_TwoBoards_ComIT**** ";
+uint8_t aTxBuffer[] = "!****UART_TwoBoards_ComIT****!";
 
 /* Buffer used for reception */
 uint8_t aRxBuffer[RXBUFFERSIZE];
@@ -115,7 +115,7 @@ static void MX_USART4_UART_Init(void);
   */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
-  uint32_t count = 100000;
+  volatile uint32_t count = 100000;
   /* Set transmission flag: trasfer complete*/
   UartReady = SET;
   HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_SET);
@@ -132,7 +132,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
-  uint32_t count = 100000;
+  volatile uint32_t count = 100000;
   /* Set transmission flag: trasfer complete*/
   UartReady = SET;
   HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_SET);
@@ -184,7 +184,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  uint32_t count;
+  volatile uint32_t count;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -277,6 +277,8 @@ int main(void)
   {
     Error_Handler();
   }
+
+  for (int i = 0; i <= TXBUFFERSIZE; i++) printf("%c", aTxBuffer[i]);
 
 #endif /* TRANSMITTER_BOARD */
 
@@ -441,7 +443,9 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXOVERRUNDISABLE_INIT|UART_ADVFEATURE_DMADISABLEONERROR_INIT;
+  huart1.AdvancedInit.OverrunDisable = UART_ADVFEATURE_OVERRUN_DISABLE;
+  huart1.AdvancedInit.DMADisableonRxError = UART_ADVFEATURE_DMA_DISABLEONRXERROR;
   if (HAL_HalfDuplex_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
@@ -462,7 +466,9 @@ static void MX_USART3_UART_Init(void)
   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
   huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXOVERRUNDISABLE_INIT|UART_ADVFEATURE_DMADISABLEONERROR_INIT;
+  huart3.AdvancedInit.OverrunDisable = UART_ADVFEATURE_OVERRUN_DISABLE;
+  huart3.AdvancedInit.DMADisableonRxError = UART_ADVFEATURE_DMA_DISABLEONRXERROR;
   if (HAL_UART_Init(&huart3) != HAL_OK)
   {
     Error_Handler();
@@ -483,7 +489,9 @@ static void MX_USART4_UART_Init(void)
   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
   huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXOVERRUNDISABLE_INIT|UART_ADVFEATURE_DMADISABLEONERROR_INIT;
+  huart4.AdvancedInit.OverrunDisable = UART_ADVFEATURE_OVERRUN_DISABLE;
+  huart4.AdvancedInit.DMADisableonRxError = UART_ADVFEATURE_DMA_DISABLEONRXERROR;
   if (HAL_UART_Init(&huart4) != HAL_OK)
   {
     Error_Handler();

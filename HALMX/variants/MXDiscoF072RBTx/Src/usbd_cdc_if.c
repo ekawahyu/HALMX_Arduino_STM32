@@ -371,6 +371,8 @@ void HAL_SYSTICK_Callback(void)
   uint32_t buffptr;
   uint32_t buffsize;
 
+  if (hUsbDevice_0->dev_state != USBD_STATE_CONFIGURED) return;
+
   if (ms_counter--) return;
   ms_counter = 20;
 
@@ -378,7 +380,7 @@ void HAL_SYSTICK_Callback(void)
   {
     if (UserTxBufPtrOut > UserTxBufPtrIn) /* rollback */
     {
-      buffsize = APP_RX_DATA_SIZE - UserTxBufPtrOut;
+      buffsize = APP_TX_DATA_SIZE - UserTxBufPtrOut;
     }
     else
     {
@@ -392,7 +394,7 @@ void HAL_SYSTICK_Callback(void)
     if (USBD_CDC_TransmitPacket(hUsbDevice_0) == USBD_OK)
     {
       UserTxBufPtrOut += buffsize;
-      if (UserTxBufPtrOut == APP_RX_DATA_SIZE)
+      if (UserTxBufPtrOut == APP_TX_DATA_SIZE)
       {
         UserTxBufPtrOut = 0;
       }
