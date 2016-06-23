@@ -51,43 +51,8 @@ UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
-#define LED1_PIN    GPIO_PIN_15
-#define LED2_PIN    GPIO_PIN_2
-#define LED3_PIN    GPIO_PIN_5
-#define LED4_PIN    GPIO_PIN_4
-#define LED5_PIN    GPIO_PIN_9
-#define LED6_PIN    GPIO_PIN_8
-#define LED7_PIN    GPIO_PIN_3
-#define LED8_PIN    GPIO_PIN_15
-
-#define LED1_GPIO   GPIOB
-#define LED2_GPIO   GPIOB
-#define LED3_GPIO   GPIOA
-#define LED4_GPIO   GPIOA
-#define LED5_GPIO   GPIOB
-#define LED6_GPIO   GPIOB
-#define LED7_GPIO   GPIOB
-#define LED8_GPIO   GPIOA
-
-/* Size of Trasmission buffer */
-#define TXBUFFERSIZE                      (COUNTOF(aTxBuffer) - 1)
-/* Size of Reception buffer */
-#define RXBUFFERSIZE                      TXBUFFERSIZE
-/* Exported macro ------------------------------------------------------------*/
-#define COUNTOF(__BUFFER__)   (sizeof(__BUFFER__) / sizeof(*(__BUFFER__)))
-
 /* Private variables ---------------------------------------------------------*/
 uint32_t dfu_reset_to_bootloader_magic;
-
-__IO ITStatus UartReady = RESET;
-
-/* Buffer used for transmission */
-uint8_t aTxBuffer[] = "!****UART_TwoBoards_ComIT****@";
-
-/* Buffer used for reception */
-uint8_t aRxBuffer[RXBUFFERSIZE];
-
-static uint16_t Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,60 +71,48 @@ static void MX_USART4_UART_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-/**
-  * @brief  Tx Transfer completed callback
-  * @param  UartHandle: UART handle.
-  * @note   This example shows a simple way to report end of IT Tx transfer, and
-  *         you can add your own implementation.
-  * @retval None
-  */
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-  volatile uint32_t count = 100000;
-  /* Set transmission flag: trasfer complete*/
-  UartReady = SET;
-  HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_SET);
-  while(count--);
-  HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_RESET);
+#ifdef USE_USART1
+  if(huart->Instance == USART1)
+    Tx1_Handler();
+#endif
+#ifdef USE_USART2
+  if(huart->Instance == USART2)
+    Tx2_Handler();
+#endif
+#ifdef USE_USART3
+  if(huart->Instance == USART3)
+    Tx3_Handler();
+#endif
+#ifdef USE_USART4
+  if(huart->Instance == USART4)
+    Tx4_Handler();
+#endif
 }
 
-/**
-  * @brief  Rx Transfer completed callback
-  * @param  UartHandle: UART handle
-  * @note   This example shows a simple way to report end of DMA Rx transfer, and
-  *         you can add your own implementation.
-  * @retval None
-  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-  volatile uint32_t count = 100000;
-  /* Set transmission flag: trasfer complete*/
-  UartReady = SET;
-  HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_SET);
-  while(count--);
-  HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_RESET);
-}
-
-/**
-  * @brief  Compares two buffers.
-  * @param  pBuffer1, pBuffer2: buffers to be compared.
-  * @param  BufferLength: buffer's length
-  * @retval 0  : pBuffer1 identical to pBuffer2
-  *         >0 : pBuffer1 differs from pBuffer2
-  */
-static uint16_t Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength)
-{
-  while (BufferLength--)
-  {
-    if ((*pBuffer1) != *pBuffer2)
-    {
-      return BufferLength;
-    }
-    pBuffer1++;
-    pBuffer2++;
+#ifdef USE_USART1
+  if(huart->Instance == USART1){
+    Rx1_Handler();
   }
-
-  return 0;
+#endif
+#ifdef USE_USART2
+  if(huart->Instance == USART2){
+    Rx2_Handler();
+  }
+#endif
+#ifdef USE_USART3
+  if(huart->Instance == USART3){
+    Rx3_Handler();
+  }
+#endif
+#ifdef USE_USART4
+  if(huart->Instance == USART4){
+    Rx4_Handler();
+  }
+#endif
 }
 
 void __initialize_hardware_early(void)
@@ -199,7 +152,7 @@ int main(void)
   MX_GPIO_Init();
   //MX_ADC_Init();
   //MX_TIM3_Init();
-  MX_USART1_UART_Init();
+  //MX_USART1_UART_Init();
   //MX_USART3_UART_Init();
   //MX_USART4_UART_Init();
   //MX_USB_DEVICE_Init();
@@ -216,6 +169,8 @@ int main(void)
   setvbuf(stderr, NULL, _IONBF, 0);
 
   setup();
+  //HAL_HalfDuplex_EnableTransmitter(&huart1);
+  HAL_HalfDuplex_EnableReceiver(&huart1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -226,116 +181,6 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     loop();
-
-#if 0 //(1 = Sender, 0 = Receiver)
-
-  HAL_Delay(1000);
-
-  /* The board sends the message and expects to receive it back */
-
-  if (HAL_HalfDuplex_EnableTransmitter(&huart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  if(HAL_UART_Transmit_IT(&huart1, (uint8_t*)aTxBuffer, TXBUFFERSIZE)!= HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  printf("TxBuffer = ");
-  for (int i = 0; i <= TXBUFFERSIZE; i++) printf("%c", aTxBuffer[i]);
-  printf("\n");
-
-  /*##-3- Wait for the end of the transfer ###################################*/
-  while (UartReady != SET);
-
-  /* Reset transmission flag */
-  UartReady = RESET;
-
-  if (HAL_HalfDuplex_EnableReceiver(&huart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /*##-4- Put UART peripheral in reception process ###########################*/
-  if(HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer, RXBUFFERSIZE) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  printf("RxBuffer = ");
-  for (int i = 0; i <= RXBUFFERSIZE; i++) printf("%c", aRxBuffer[i]);
-  printf("\n");
-
-#else
-
-  /* The board receives the message and sends it back */
-
-   if (HAL_HalfDuplex_EnableReceiver(&huart1) != HAL_OK)
-   {
-     Error_Handler();
-   }
-
-  /*##-2- Put UART peripheral in reception process ###########################*/
-  if(HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer, RXBUFFERSIZE) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  printf("RxBuffer = ");
-  for (int i = 0; i <= RXBUFFERSIZE; i++) printf("%c", aRxBuffer[i]);
-  printf("\n");
-
-  /*##-3- Wait for the end of the transfer ###################################*/
-  /* While waiting for message to come from the other board, LED4 is
-     blinking according to the following pattern: a double flash every half-second */
-  while (UartReady != SET);
-
-  /* Reset transmission flag */
-  UartReady = RESET;
-
-  HAL_Delay(1000);
-
-  if (HAL_HalfDuplex_EnableTransmitter(&huart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /*##-4- Start the transmission process #####################################*/
-  /* While the UART in reception process, user can transmit data through
-     "aTxBuffer" buffer */
-  if(HAL_UART_Transmit_IT(&huart1, (uint8_t*)aTxBuffer, TXBUFFERSIZE)!= HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  printf("TxBuffer = ");
-  for (int i = 0; i <= TXBUFFERSIZE; i++) printf("%c", aTxBuffer[i]);
-  printf("\n");
-
-#endif /* TRANSMITTER_BOARD */
-
-
-  /*##-5- Wait for the end of the transfer ###################################*/
-  while (UartReady != SET)
-  {
-  }
-
-  /* Reset transmission flag */
-  UartReady = RESET;
-
-  /*##-6- Compare the sent and received buffers ##############################*/
-  if(Buffercmp((uint8_t*)aTxBuffer,(uint8_t*)aRxBuffer,RXBUFFERSIZE))
-  {
-    count = 100000;
-    HAL_GPIO_WritePin(LED3_GPIO, LED3_PIN, GPIO_PIN_SET);
-    while(count--);
-    HAL_GPIO_WritePin(LED3_GPIO, LED3_PIN, GPIO_PIN_RESET);
-  }
-
-  HAL_Delay(1000);
-
   }
   /* USER CODE END 3 */
 

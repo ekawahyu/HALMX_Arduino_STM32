@@ -27,11 +27,19 @@ NodinoF072LED.menu.upload_method.STLinkMethod=STLink
 NodinoF072LED.menu.upload_method.STLinkMethod.upload.protocol=STLink
 NodinoF072LED.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 
-NodinoF072LED.menu.upload_method.OpenOCDMethod=OpenOCD
-NodinoF072LED.menu.upload_method.OpenOCDMethod.upload.protocol=OpenOCD
-NodinoF072LED.menu.upload_method.OpenOCDMethod.upload.tool=openocd_upload
-NodinoF072LED.menu.upload_method.OpenOCDMethod.upload.interface=stlink-v2
-NodinoF072LED.menu.upload_method.OpenOCDMethod.upload.target=stm32f0x
+NodinoF072LED.menu.upload_method.OpenOCDSTLinkMethod=OpenOCD-STLink
+NodinoF072LED.menu.upload_method.OpenOCDSTLinkMethod.upload.protocol=OpenOCD
+NodinoF072LED.menu.upload_method.OpenOCDSTLinkMethod.upload.transport=swd
+NodinoF072LED.menu.upload_method.OpenOCDSTLinkMethod.upload.tool=openocd_upload
+NodinoF072LED.menu.upload_method.OpenOCDSTLinkMethod.upload.interface=stlink-v2
+NodinoF072LED.menu.upload_method.OpenOCDSTLinkMethod.upload.target=stm32f0x
+
+NodinoF072LED.menu.upload_method.OpenOCDJLinkMethod=OpenOCD-JLink
+NodinoF072LED.menu.upload_method.OpenOCDJLinkMethod.upload.protocol=OpenOCD
+NodinoF072LED.menu.upload_method.OpenOCDJLinkMethod.upload.transport=swd
+NodinoF072LED.menu.upload_method.OpenOCDJLinkMethod.upload.tool=openocd_upload
+NodinoF072LED.menu.upload_method.OpenOCDJLinkMethod.upload.interface=jlink
+NodinoF072LED.menu.upload_method.OpenOCDJLinkMethod.upload.target=stm32f0x
 
 NodinoF072LED.menu.upload_method.DFUUploadMethod=STM32DFU
 NodinoF072LED.menu.upload_method.DFUUploadMethod.upload.protocol=STM32DFU
@@ -62,11 +70,12 @@ MXDiscoF072RBTx.menu.upload_method.STLinkMethod=STLink
 MXDiscoF072RBTx.menu.upload_method.STLinkMethod.upload.protocol=STLink
 MXDiscoF072RBTx.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 
-MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod=OpenOCD
-MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.protocol=OpenOCD
-MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.tool=openocd_upload
-MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.interface=stlink-v2
-MXDiscoF072RBTx.menu.upload_method.OpenOCDMethod.upload.target=stm32f0x
+MXDiscoF072RBTx.menu.upload_method.OpenOCDSTLinkMethod=OpenOCD-STLink
+MXDiscoF072RBTx.menu.upload_method.OpenOCDSTLinkMethod.upload.protocol=OpenOCD
+MXDiscoF072RBTx.menu.upload_method.OpenOCDSTLinkMethod.upload.transport=swd
+MXDiscoF072RBTx.menu.upload_method.OpenOCDSTLinkMethod.upload.tool=openocd_upload
+MXDiscoF072RBTx.menu.upload_method.OpenOCDSTLinkMethod.upload.interface=stlink-v2
+MXDiscoF072RBTx.menu.upload_method.OpenOCDSTLinkMethod.upload.target=stm32f0x
 
 MXDiscoF072RBTx.menu.upload_method.DFUUploadMethod=STM32DFU
 MXDiscoF072RBTx.menu.upload_method.DFUUploadMethod.upload.protocol=STM32DFU

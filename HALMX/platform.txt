@@ -204,21 +204,21 @@ tools.bmp_upload.upload.pattern="{path}{cmd}" -cd "{build.path}" -b {upload.spee
 #tools.bmp_upload.upload.pattern.windows="{path}/{cmd}"  {runtime.tools.arm-none-eabi-gcc.path}/bin/ {upload.speed} {upload.verbose}  "target extended-remote {serial.port}" "{build.path}/{build.project_name}.elf"
 
 # upload using built-in openocd for arduino zero
-tools.openocd_upload.path={runtime.tools.openocd.path}
-tools.openocd_upload.cmd=bin/openocd
-tools.openocd_upload.cmd.windows=bin/openocd.exe
-tools.openocd_upload.upload.params.verbose=
-tools.openocd_upload.upload.params.quiet=
-tools.openocd_upload.upload.pattern="{path}/{cmd}" -s "{path}/share/openocd/scripts" -f "interface/{upload.interface}.cfg" -f "target/{upload.target}.cfg" -c "init; reset halt; flash write_image erase {build.path}/{build.project_name}.bin 0x08000000; reset run; shutdown"
-
-# openocd upload
-#tools.openocd_upload.cmd=openocd
-#tools.openocd_upload.path.windows={runtime.hardware.path}/tools/win
-#tools.openocd_upload.path.macosx=/opt/local # need to build openocd with static libraries instead
-#tools.openocd_upload.path.linux={runtime.hardware.path}/tools/linux
+#tools.openocd_upload.path={runtime.tools.openocd.path}
+#tools.openocd_upload.cmd=bin/openocd
+#tools.openocd_upload.cmd.windows=bin/openocd.exe
 #tools.openocd_upload.upload.params.verbose=
 #tools.openocd_upload.upload.params.quiet=
-#tools.openocd_upload.upload.pattern="{path}/bin/{cmd}" -s "{path}/share/openocd/scripts" -f "interface/{upload.interface}.cfg" -f "target/{upload.target}.cfg" -c "init; reset halt; flash write_image erase {build.path}/{build.project_name}.bin 0x08000000; reset run; shutdown"
+#tools.openocd_upload.upload.pattern="{path}/{cmd}" -s "{path}/share/openocd/scripts" -f "interface/{upload.interface}.cfg" -c "transport select {upload.transport}" -f "target/{upload.target}.cfg" -c "init; reset halt; flash write_image erase {build.path}/{build.project_name}.bin 0x08000000; reset run; shutdown"
+
+# openocd upload
+tools.openocd_upload.cmd=openocd
+tools.openocd_upload.path.windows={runtime.hardware.path}/tools/win
+tools.openocd_upload.path.macosx=/opt/local
+tools.openocd_upload.path.linux={runtime.hardware.path}/tools/linux
+tools.openocd_upload.upload.params.verbose=
+tools.openocd_upload.upload.params.quiet=
+tools.openocd_upload.upload.pattern="{path}/bin/{cmd}" -s "{path}/share/openocd/scripts" -f "interface/{upload.interface}.cfg" -c "transport select {upload.transport}" -f "target/{upload.target}.cfg" -c "init; reset halt; flash write_image erase {build.path}/{build.project_name}.bin 0x08000000; reset run; shutdown"
 
 # STM32 built-in DFU upload
 tools.dfu_upload.cmd=dfu_upload

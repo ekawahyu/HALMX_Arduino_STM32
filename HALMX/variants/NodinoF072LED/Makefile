@@ -1,5 +1,6 @@
 ARM_NONE_EABI_BIN=/Users/nodino/gcc-arm-none-eabi/bin
 OPENOCD_HOME=/opt/local
+DFU_UTIL_HOME=/opt/local
 COPY=cp
 
 # put your *.o targets here, make should handle the rest!
@@ -10,7 +11,7 @@ SRCS += itoa.c syscalls.c wiring_analog.c wiring_digital.c wiring_shift.c wiring
 CXXSRCS = new.cpp Print.cpp RingBuffer.cpp Stream.cpp UARTClass.cpp USARTClass.cpp
 CXXSRCS += USBSerial.cpp WMath.cpp WString.cpp
 CXXSRCS += variant.cpp
-INOSRCS = USBSerial_example.ino
+INOSRCS = mdb_receiver.ino
 
 # all the files will be generated with this name (main.elf, main.bin, main.hex, etc)
 PROJ_NAME=main
@@ -58,7 +59,7 @@ vpath %.c Src ../../cores/mapleMX
 vpath %.cpp Src ../../cores/mapleMX
 vpath %.s $(DRIVER)/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc
 vpath %.a $(DRIVER)
-vpath %.ino ../../../examples/Communications/USBSerial_example
+vpath %.ino ../../../examples/Communications/mdb_receiver
 
 ROOT=$(shell pwd)
 
@@ -111,6 +112,9 @@ flash-stlink: all $(PROJ_NAME).bin
 
 flash-jlink: all $(PROJ_NAME).bin
 	$(OPENOCD_HOME)/bin/openocd -f $(OPENOCD_INTERFACE_DIR)/jlink.cfg -c "transport select swd" -f $(OPENOCD_TARGET_DIR)/stm32f0x.cfg -f $(OPENOCD_PROC_FILE) -c "stm_flash `pwd`/$(PROJ_NAME).bin" -c shutdown
+
+dfu: all $(PROJ_NAME).bin
+	$(DFU_UTIL_HOME)/bin/dfu-util -d 0483:df11 -a 0 -s 0x08000000:leave -D $(PROJ_NAME).bin
 
 clean:
 	find ./ -name '*~' | xargs rm -f

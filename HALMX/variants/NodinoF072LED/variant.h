@@ -61,6 +61,22 @@
 extern "C" {
 #endif
 
+#ifdef USE_USART1
+extern UART_HandleTypeDef huart1;
+#endif
+
+#ifdef USE_USART2
+extern UART_HandleTypeDef huart2;
+#endif
+
+#ifdef USE_USART3
+extern UART_HandleTypeDef huart3;
+#endif
+
+#ifdef USE_USART4
+extern UART_HandleTypeDef huart4;
+#endif
+
 #ifdef USE_USBSerial
 extern USBD_HandleTypeDef hUsbDeviceFS;
 #endif
@@ -103,6 +119,14 @@ typedef struct _Pin2PortMapArray
 /* Pins table to be instantiated into variant.cpp */
 extern const Pin2PortMapArray g_Pin2PortMapArray[];
 
+void Rx1_Handler(void);
+void Tx1_Handler(void);
+void Rx2_Handler(void);
+void Tx2_Handler(void);
+void Rx3_Handler(void);
+void Tx3_Handler(void);
+void Rx4_Handler(void);
+void Tx4_Handler(void);
 void StartUSBSerial(void);
 
 #ifdef __cplusplus
@@ -127,6 +151,10 @@ extern UARTClass Serial2;
 extern UARTClass Serial3;
 #endif
 
+#ifdef USE_USART4
+extern UARTClass Serial4;
+#endif
+
 #ifdef USE_USBSerial
 extern USBSerial Serial;
 #endif
@@ -138,8 +166,10 @@ extern USBSerial Serial;
 #define SERIAL_PORT_HARDWARE_OPEN   Serial1
 #define SERIAL_PORT_HARDWARE_OPEN1  Serial2
 #define SERIAL_PORT_HARDWARE_OPEN2  Serial3
+#define SERIAL_PORT_HARDWARE_OPEN3  Serial4
 #define SERIAL_PORT_HARDWARE        Serial
 #define SERIAL_PORT_HARDWARE1       Serial1
 #define SERIAL_PORT_HARDWARE2       Serial2
+#define SERIAL_PORT_HARDWARE3       Serial3
 
 #endif /* INC_VARIANT_H_ */

@@ -73,6 +73,11 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
   _pUart->Init.HwFlowCtl = UART_HWCONTROL_NONE;
   _pUart->Init.OverSampling = UART_OVERSAMPLING_16;
 
+  // Temporary hacked by Eka for half duplex mode
+  _pUart->Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  _pUart->AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXOVERRUNDISABLE_INIT|UART_ADVFEATURE_DMADISABLEONERROR_INIT;
+  _pUart->AdvancedInit.OverrunDisable = UART_ADVFEATURE_OVERRUN_DISABLE;
+  _pUart->AdvancedInit.DMADisableonRxError = UART_ADVFEATURE_DMA_DISABLEONRXERROR;
 
   // Configure interrupts
   // Enable UART interrupt in NVIC  when we have enough info for bridge
@@ -85,7 +90,10 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
   /** Enable receiver and transmitter
    *  02 March 2016 by Vassilis Serasidis
    */
-  HAL_UART_Init(_pUart);
+  // Temporary hacked by Eka for half duplex mode
+  //HAL_UART_Init(_pUart);
+  HAL_HalfDuplex_Init(_pUart);
+
   
   HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
 }
@@ -136,6 +144,7 @@ int UARTClass::peek( void )
 
 int UARTClass::read( void )
 {
+  HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
   // if the head isn't ahead of the tail, we don't have any characters
   if ( rx_buffer.iHead == rx_buffer.iTail )
     return -1;
