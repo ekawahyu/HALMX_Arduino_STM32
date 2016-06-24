@@ -50,16 +50,28 @@ UARTClass::UARTClass( UART_HandleTypeDef *pUart, IRQn_Type dwIrq, uint32_t dwId,
 
 void UARTClass::begin(const uint32_t dwBaudRate)
 {
-  begin(dwBaudRate, Mode_8N1);
+  begin(dwBaudRate, Param_8N1);
 }
 
-void UARTClass::begin(const uint32_t dwBaudRate, const UARTModes config)
+void UARTClass::begin(const uint32_t dwBaudRate, const UARTParams param)
+{
+  UARTModes mode = Mode_Full_Duplex;
+  begin(dwBaudRate, param, mode);
+}
+
+void UARTClass::begin(const uint32_t dwBaudRate, const UARTModes mode)
+{
+  UARTParams param = Param_8N1;
+  begin(dwBaudRate, param, mode);
+}
+
+void UARTClass::begin(const uint32_t dwBaudRate, const UARTParams param, const UARTModes mode)
 {
   uint32_t modeReg = 0;//static_cast<uint32_t>(config) & 0x00000E00;
-  init(dwBaudRate, modeReg);  
-} 
+  init(dwBaudRate, modeReg, mode);
+}
 
-void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
+void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg, const uint8_t mode)
 {
   /** Configure baudrate (asynchronous, no oversampling)
    *  02 March 2016 by Vassilis Serasidis
@@ -89,14 +101,15 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
 
   /** Enable receiver and transmitter
    *  02 March 2016 by Vassilis Serasidis
+   *  24 June 2016 by Eka, added duplex mode
    */
-  // Temporary hacked by Eka for half duplex mode
-  //HAL_UART_Init(_pUart);
+  if (mode == Mode_Full_Duplex) HAL_UART_Init(_pUart);
+  if (mode == Mode_Half_Duplex) {
+    HAL_HalfDuplex_Init(_pUart);
+    //HAL_HalfDuplex_EnableTransmitter(_pUart);
+    HAL_HalfDuplex_EnableReceiver(_pUart);
+  }
 
-  HAL_HalfDuplex_Init(_pUart);
-  //HAL_HalfDuplex_EnableTransmitter(_pUart);
-  HAL_HalfDuplex_EnableReceiver(_pUart);
-  
   HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
 }
 

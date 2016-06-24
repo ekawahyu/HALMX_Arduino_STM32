@@ -22,7 +22,7 @@ void setup() {
   pinMode(LED8, OUTPUT);
   
   Serial.begin(9600); // baudrate is not actually used
-  Serial1.begin(9600);
+  Serial1.begin(9600, SERIAL_HALF_DUPLEX);
 }
 
 void loop() {

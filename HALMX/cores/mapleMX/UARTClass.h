@@ -28,29 +28,38 @@
 //#include "variant.h"
 
 
-#define SERIAL_8N1 UARTClass::Mode_8N1
-#define SERIAL_8E1 UARTClass::Mode_8E1
-#define SERIAL_8O1 UARTClass::Mode_8O1
-#define SERIAL_8M1 UARTClass::Mode_8M1
-#define SERIAL_8S1 UARTClass::Mode_8S1
+#define SERIAL_8N1 UARTClass::Param_8N1
+#define SERIAL_8E1 UARTClass::Param_8E1
+#define SERIAL_8O1 UARTClass::Param_8O1
+#define SERIAL_8M1 UARTClass::Param_8M1
+#define SERIAL_8S1 UARTClass::Param_8S1
+
+#define SERIAL_FULL_DUPLEX UARTClass::Mode_Full_Duplex
+#define SERIAL_HALF_DUPLEX UARTClass::Mode_Half_Duplex
 
 #define SERIAL_BUFFER_SIZE 128
 
 class UARTClass : public HardwareSerial
 {
   public:
+    enum UARTParams {
+      Param_8N1 = 0, //US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_NO,
+      Param_8E1, // = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_EVEN,
+      Param_8O1, // = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_ODD,
+      Param_8M1, // = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_MARK,
+      Param_8S1 // = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_SPACE,
+    };
     enum UARTModes {
-      Mode_8N1 = 0, //US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_NO,
-      Mode_8E1, // = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_EVEN,
-      Mode_8O1, // = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_ODD,
-      Mode_8M1, // = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_MARK,
-      Mode_8S1 // = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_SPACE,
+      Mode_Full_Duplex = 0,
+      Mode_Half_Duplex
     };
     UARTClass(UART_HandleTypeDef *pUart, IRQn_Type dwIrq, uint32_t dwId);
     UARTClass(UART_HandleTypeDef *pUart, IRQn_Type dwIrq, uint32_t dwId, USART_TypeDef* usartNumber );
     UARTClass(void);
     void begin(const uint32_t dwBaudRate);
-    void begin(const uint32_t dwBaudRate, const UARTModes config);
+    void begin(const uint32_t dwBaudRate, const UARTParams param);
+    void begin(const uint32_t dwBaudRate, const UARTModes mode);
+    void begin(const uint32_t dwBaudRate, const UARTParams param, const UARTModes mode);
     void end(void);
     int available(void);
     int availableForWrite(void);
@@ -69,7 +78,7 @@ class UARTClass : public HardwareSerial
     operator bool() { return true; }; // UART always active
 
   protected:
-    void init(const uint32_t dwBaudRate, const uint32_t config);
+    void init(const uint32_t dwBaudRate, const uint32_t config, uint8_t mode);
     
     struct ring_buffer
     {
@@ -83,6 +92,7 @@ class UARTClass : public HardwareSerial
     uint32_t _dwId;
     USART_TypeDef* _usartNumber;
     uint8_t r_byte;
+    uint8_t _mode;
     ring_buffer tx_buffer;// = { { 0 }, 0, 0};
     ring_buffer rx_buffer;// = { { 0 }, 0, 0};
 

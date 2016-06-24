@@ -36,10 +36,10 @@ USARTClass::USARTClass( UART_HandleTypeDef* pUsart, IRQn_Type dwIrq, uint32_t dw
 
 void USARTClass::begin(const uint32_t dwBaudRate)
 {
-  begin(dwBaudRate, Mode_8N1);
+  begin(dwBaudRate, Param_8N1);
 }
 
-void USARTClass::begin(const uint32_t dwBaudRate, const UARTModes config)
+void USARTClass::begin(const uint32_t dwBaudRate, const UARTParams config)
 {
 //  uint32_t modeReg = static_cast<uint32_t>(config);
 //  modeReg |= US_MR_USART_MODE_NORMAL | US_MR_USCLKS_MCK | US_MR_CHMODE_NORMAL;
