@@ -92,8 +92,10 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
    */
   // Temporary hacked by Eka for half duplex mode
   //HAL_UART_Init(_pUart);
-  HAL_HalfDuplex_Init(_pUart);
 
+  HAL_HalfDuplex_Init(_pUart);
+  //HAL_HalfDuplex_EnableTransmitter(_pUart);
+  HAL_HalfDuplex_EnableReceiver(_pUart);
   
   HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
 }
@@ -144,7 +146,6 @@ int UARTClass::peek( void )
 
 int UARTClass::read( void )
 {
-  HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
   // if the head isn't ahead of the tail, we don't have any characters
   if ( rx_buffer.iHead == rx_buffer.iTail )
     return -1;

@@ -169,8 +169,7 @@ int main(void)
   setvbuf(stderr, NULL, _IONBF, 0);
 
   setup();
-  //HAL_HalfDuplex_EnableTransmitter(&huart1);
-  HAL_HalfDuplex_EnableReceiver(&huart1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
