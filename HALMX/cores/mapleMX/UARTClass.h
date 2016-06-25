@@ -37,6 +37,9 @@
 #define SERIAL_FULL_DUPLEX UARTClass::Mode_Full_Duplex
 #define SERIAL_HALF_DUPLEX UARTClass::Mode_Half_Duplex
 
+#define SERIAL_HALF_DUPLEX_RX UARTClass::Duplex_RX
+#define SERIAL_HALF_DUPLEX_TX UARTClass::Duplex_TX
+
 #define SERIAL_BUFFER_SIZE 128
 
 class UARTClass : public HardwareSerial
@@ -52,6 +55,10 @@ class UARTClass : public HardwareSerial
     enum UARTModes {
       Mode_Full_Duplex = 0,
       Mode_Half_Duplex
+    };
+    enum UARTDuplex {
+      Duplex_RX = 0,
+      Duplex_TX
     };
     UARTClass(UART_HandleTypeDef *pUart, IRQn_Type dwIrq, uint32_t dwId);
     UARTClass(UART_HandleTypeDef *pUart, IRQn_Type dwIrq, uint32_t dwId, USART_TypeDef* usartNumber );
@@ -74,6 +81,7 @@ class UARTClass : public HardwareSerial
 
     void RxHandler(void); /* Vassilis Serasidis */
     void TxHandler(void); /* Vassilis Serasidis */
+    void lineswitch(UARTDuplex TxRx); /* Eka */
 
     operator bool() { return true; }; // UART always active
 

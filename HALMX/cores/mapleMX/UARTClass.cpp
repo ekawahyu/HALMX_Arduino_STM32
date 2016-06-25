@@ -21,6 +21,8 @@
 #include <string.h>
 #include "UARTClass.h"
 
+#define UART_TX_NON_BLOCKING    0
+#define UART_HALF_DUPLEX        1
 
 // Constructors ////////////////////////////////////////////////////////////////
 UARTClass::UARTClass(void){
@@ -104,11 +106,12 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg, const ui
    *  24 June 2016 by Eka, added duplex mode
    */
   if (mode == Mode_Full_Duplex) HAL_UART_Init(_pUart);
+#if UART_HALF_DUPLEX
   if (mode == Mode_Half_Duplex) {
     HAL_HalfDuplex_Init(_pUart);
-    //HAL_HalfDuplex_EnableTransmitter(_pUart);
     HAL_HalfDuplex_EnableReceiver(_pUart);
   }
+#endif
 
   HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
 }
@@ -177,10 +180,21 @@ void UARTClass::flush( void )
 
 size_t UARTClass::write( const uint8_t uc_data )
 {
+#if UART_TX_NON_BLOCKING
   if(HAL_UART_Transmit_IT(_pUart, (uint8_t *)&uc_data, 1) == HAL_BUSY){
     tx_buffer.buffer[tx_buffer.iHead] = uc_data;
     tx_buffer.iHead = (uint32_t)(tx_buffer.iHead + 1) % SERIAL_BUFFER_SIZE;
   }
+#else
+#if UART_HALF_DUPLEX
+  HAL_HalfDuplex_EnableTransmitter(_pUart);
+#endif
+  HAL_UART_Transmit(_pUart, (uint8_t *)&uc_data, 1, 10);
+#if UART_HALF_DUPLEX
+  HAL_HalfDuplex_EnableReceiver(_pUart);
+  HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
+#endif
+#endif
   return 1;
 }
 

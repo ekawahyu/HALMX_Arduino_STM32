@@ -10,6 +10,8 @@
 #define LED8   PA15
 
 int dataIn;
+uint32_t counter;
+uint32_t myindex;
 
 void setup() {
   pinMode(LED1, OUTPUT);
@@ -26,13 +28,18 @@ void setup() {
 }
 
 void loop() {
-  //digitalWrite(LED1, HIGH); // turn the LED on (HIGH is the voltage level)
-  //delay(100);              // wait for a second
-  //digitalWrite(LED1, LOW);  // turn the LED off by making the voltage LOW
-  //delay(100);              // wait for a second
+  if (counter++ == 50000) {
+    counter = 0;
+    myindex++;
+    digitalWrite(LED1, HIGH); // turn the LED on (HIGH is the voltage level)
+    delay(100);              // wait for a second
+    digitalWrite(LED1, LOW);  // turn the LED off by making the voltage LOW
+    delay(100);              // wait for a second
+    Serial1.write("Hello Sender!\n");
+    Serial1.println(myindex, DEC);
+  }
 
   dataIn = Serial1.read();
   if (dataIn >= 0)
   Serial.write(dataIn);
-  //Serial.write("uhmmm");
 }
