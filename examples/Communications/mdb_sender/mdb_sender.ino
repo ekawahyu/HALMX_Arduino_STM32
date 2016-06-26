@@ -25,21 +25,25 @@ void setup() {
   
   Serial.begin(9600); // baudrate is not actually used
   Serial1.begin(9600, SERIAL_HALF_DUPLEX);
+  Serial3.begin(1200); // bottom sensor
+  Serial4.begin(1200); // top sensor
 }
 
 void loop() {
-  if (counter++ == 50000) {
+  if (counter++ == 1000000) {
     counter = 0;
     myindex++;
     digitalWrite(LED1, HIGH); // turn the LED on (HIGH is the voltage level)
     delay(100);              // wait for a second
     digitalWrite(LED1, LOW);  // turn the LED off by making the voltage LOW
     delay(100);              // wait for a second
-    Serial1.print("Hello Receiver!\n");
+    Serial1.print("S1:Hello Receiver!\n");
     Serial1.println(myindex, DEC);
+    Serial4.write("S4:Hello Receiver!\n");
+    Serial4.println(myindex, DEC);
   }
 
-  dataIn = Serial1.read();
+  dataIn = Serial4.read();
   if (dataIn >= 0)
   Serial.write(dataIn);
 }
