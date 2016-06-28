@@ -192,8 +192,8 @@ size_t UARTClass::write( const uint8_t uc_data )
   HAL_UART_Transmit(_pUart, (uint8_t *)&uc_data, 1, 10);
 #if UART_HALF_DUPLEX
   HAL_HalfDuplex_EnableReceiver(_pUart);
-  HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
 #endif
+  HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
 #endif
   return 1;
 }
