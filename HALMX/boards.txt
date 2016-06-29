@@ -5,11 +5,54 @@ menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
 
 ##############################################################
+NodinoF072RobotBase.name=F072-RobotBase
+
+NodinoF072RobotBase.upload.file_type=bin
+NodinoF072RobotBase.upload.flash.maximum_size=64k
+NodinoF072RobotBase.upload.ram.maximum_size=16k
+
+NodinoF072RobotBase.build.mcu=cortex-m0
+NodinoF072RobotBase.build.f_cpu=48000000L
+NodinoF072RobotBase.build.board=HALMX_NODINOF072ROBOTBASE
+NodinoF072RobotBase.build.core=mapleMX
+NodinoF072RobotBase.build.variant=NodinoF072RobotBase
+
+NodinoF072RobotBase.build.CMSISInc=STM32F0xx/Include
+NodinoF072RobotBase.build.DRIVERS=STM32F0xx_HAL_Driver/Inc
+NodinoF072RobotBase.build.common_flags=-mthumb -D__STM32F0__
+NodinoF072RobotBase.build.extra_flags=-DSTM32F072xB
+NodinoF072RobotBase.build.ldscript=SW4STM32/NodinoF072RobotBase/STM32F072C8Tx_FLASH.ld
+
+NodinoF072RobotBase.menu.upload_method.STLinkMethod=STLink
+NodinoF072RobotBase.menu.upload_method.STLinkMethod.upload.protocol=STLink
+NodinoF072RobotBase.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+
+NodinoF072RobotBase.menu.upload_method.OpenOCDSTLinkMethod=OpenOCD-STLink
+NodinoF072RobotBase.menu.upload_method.OpenOCDSTLinkMethod.upload.protocol=OpenOCD
+NodinoF072RobotBase.menu.upload_method.OpenOCDSTLinkMethod.upload.transport=swd
+NodinoF072RobotBase.menu.upload_method.OpenOCDSTLinkMethod.upload.tool=openocd_upload
+NodinoF072RobotBase.menu.upload_method.OpenOCDSTLinkMethod.upload.interface=stlink-v2
+NodinoF072RobotBase.menu.upload_method.OpenOCDSTLinkMethod.upload.target=stm32f0x
+
+NodinoF072RobotBase.menu.upload_method.OpenOCDJLinkMethod=OpenOCD-JLink
+NodinoF072RobotBase.menu.upload_method.OpenOCDJLinkMethod.upload.protocol=OpenOCD
+NodinoF072RobotBase.menu.upload_method.OpenOCDJLinkMethod.upload.transport=swd
+NodinoF072RobotBase.menu.upload_method.OpenOCDJLinkMethod.upload.tool=openocd_upload
+NodinoF072RobotBase.menu.upload_method.OpenOCDJLinkMethod.upload.interface=jlink
+NodinoF072RobotBase.menu.upload_method.OpenOCDJLinkMethod.upload.target=stm32f0x
+
+NodinoF072RobotBase.menu.upload_method.DFUUploadMethod=STM32DFU
+NodinoF072RobotBase.menu.upload_method.DFUUploadMethod.upload.protocol=STM32DFU
+NodinoF072RobotBase.menu.upload_method.DFUUploadMethod.upload.tool=dfu_upload
+NodinoF072RobotBase.menu.upload_method.DFUUploadMethod.upload.usbID=0483:df11
+NodinoF072RobotBase.menu.upload_method.DFUUploadMethod.upload.altID=0
+
+##############################################################
 NodinoF072LED.name=F072-LED
 
 NodinoF072LED.upload.file_type=bin
-NodinoF072LED.upload.flash.maximum_size=128k
-NodinoF072LED.upload.ram.maximum_size=20k
+NodinoF072LED.upload.flash.maximum_size=64k
+NodinoF072LED.upload.ram.maximum_size=16k
 
 NodinoF072LED.build.mcu=cortex-m0
 NodinoF072LED.build.f_cpu=48000000L
