@@ -37,8 +37,8 @@
 #define SERIAL_FULL_DUPLEX UARTClass::Mode_Full_Duplex
 #define SERIAL_HALF_DUPLEX UARTClass::Mode_Half_Duplex
 
-#define SERIAL_HALF_DUPLEX_RX UARTClass::Duplex_RX
-#define SERIAL_HALF_DUPLEX_TX UARTClass::Duplex_TX
+#define SERIAL_CTRL_NON_BLOCKING UARTClass::Ctrl_Non_Blocking
+#define SERIAL_CTRL_BLOCKING UARTClass::Ctrl_Blocking
 
 #define SERIAL_BUFFER_SIZE 128
 
@@ -56,9 +56,9 @@ class UARTClass : public HardwareSerial
       Mode_Full_Duplex = 0,
       Mode_Half_Duplex
     };
-    enum UARTDuplex {
-      Duplex_RX = 0,
-      Duplex_TX
+    enum UARTCtrl {
+      Ctrl_Non_Blocking = 0,
+      Ctrl_Blocking
     };
     UARTClass(UART_HandleTypeDef *pUart, IRQn_Type dwIrq, uint32_t dwId);
     UARTClass(UART_HandleTypeDef *pUart, IRQn_Type dwIrq, uint32_t dwId, USART_TypeDef* usartNumber );
@@ -66,7 +66,10 @@ class UARTClass : public HardwareSerial
     void begin(const uint32_t dwBaudRate);
     void begin(const uint32_t dwBaudRate, const UARTParams param);
     void begin(const uint32_t dwBaudRate, const UARTModes mode);
-    void begin(const uint32_t dwBaudRate, const UARTParams param, const UARTModes mode);
+    void begin(const uint32_t dwBaudRate, const UARTCtrl ctrl);
+    void begin(const uint32_t dwBaudRate, const UARTParams param, const UARTCtrl ctrl);
+    void begin(const uint32_t dwBaudRate, const UARTModes mode, const UARTCtrl ctrl);
+    void begin(const uint32_t dwBaudRate, const UARTParams param, const UARTModes mode, const UARTCtrl ctrl);
     void end(void);
     int available(void);
     int availableForWrite(void);
@@ -81,12 +84,11 @@ class UARTClass : public HardwareSerial
 
     void RxHandler(void); /* Vassilis Serasidis */
     void TxHandler(void); /* Vassilis Serasidis */
-    void lineswitch(UARTDuplex TxRx); /* Eka */
 
     operator bool() { return true; }; // UART always active
 
   protected:
-    void init(const uint32_t dwBaudRate, const uint32_t config, uint8_t mode);
+    void init(const uint32_t dwBaudRate, const uint32_t config, uint8_t mode, uint8_t ctrl);
     
     struct ring_buffer
     {
@@ -101,6 +103,7 @@ class UARTClass : public HardwareSerial
     USART_TypeDef* _usartNumber;
     uint8_t r_byte;
     uint8_t _mode;
+    uint8_t _ctrl;
     ring_buffer tx_buffer;// = { { 0 }, 0, 0};
     ring_buffer rx_buffer;// = { { 0 }, 0, 0};
 

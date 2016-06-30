@@ -24,7 +24,7 @@ void setup() {
   pinMode(LED8, OUTPUT);
   
   Serial.begin(9600); // baudrate is not actually used
-  Serial1.begin(9600, SERIAL_HALF_DUPLEX);
+  Serial1.begin(9600, SERIAL_HALF_DUPLEX, SERIAL_CTRL_BLOCKING);
   Serial3.begin(1200); // bottom sensor
   Serial4.begin(1200); // top sensor
 }

@@ -21,8 +21,6 @@
 #include <string.h>
 #include "UARTClass.h"
 
-#define UART_TX_NON_BLOCKING    0
-#define UART_HALF_DUPLEX        1
 
 // Constructors ////////////////////////////////////////////////////////////////
 UARTClass::UARTClass(void){
@@ -58,22 +56,43 @@ void UARTClass::begin(const uint32_t dwBaudRate)
 void UARTClass::begin(const uint32_t dwBaudRate, const UARTParams param)
 {
   UARTModes mode = Mode_Full_Duplex;
-  begin(dwBaudRate, param, mode);
+  UARTCtrl ctrl = Ctrl_Non_Blocking;
+  begin(dwBaudRate, param, mode, ctrl);
 }
 
 void UARTClass::begin(const uint32_t dwBaudRate, const UARTModes mode)
 {
   UARTParams param = Param_8N1;
-  begin(dwBaudRate, param, mode);
+  UARTCtrl ctrl = Ctrl_Non_Blocking;
+  begin(dwBaudRate, param, mode, ctrl);
 }
 
-void UARTClass::begin(const uint32_t dwBaudRate, const UARTParams param, const UARTModes mode)
+void UARTClass::begin(const uint32_t dwBaudRate, const UARTCtrl ctrl)
+{
+  UARTParams param = Param_8N1;
+  UARTModes mode = Mode_Full_Duplex;
+  begin(dwBaudRate, param, mode, ctrl);
+}
+
+void UARTClass::begin(const uint32_t dwBaudRate, const UARTParams param, const UARTCtrl ctrl)
+{
+  UARTModes mode = Mode_Full_Duplex;
+  begin(dwBaudRate, param, mode, ctrl);
+}
+
+void UARTClass::begin(const uint32_t dwBaudRate, const UARTModes mode, const UARTCtrl ctrl)
+{
+  UARTParams param = Param_8N1;
+  begin(dwBaudRate, param, mode, ctrl);
+}
+
+void UARTClass::begin(const uint32_t dwBaudRate, const UARTParams param, const UARTModes mode, const UARTCtrl ctrl)
 {
   uint32_t modeReg = 0;//static_cast<uint32_t>(config) & 0x00000E00;
-  init(dwBaudRate, modeReg, mode);
+  init(dwBaudRate, modeReg, mode, ctrl);
 }
 
-void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg, const uint8_t mode)
+void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg, const uint8_t mode, const uint8_t ctrl)
 {
   /** Configure baudrate (asynchronous, no oversampling)
    *  02 March 2016 by Vassilis Serasidis
@@ -87,7 +106,7 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg, const ui
   _pUart->Init.HwFlowCtl = UART_HWCONTROL_NONE;
   _pUart->Init.OverSampling = UART_OVERSAMPLING_16;
 
-  // Temporary hacked by Eka for half duplex mode
+  // Added by Eka 30 June 2016
   _pUart->Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   _pUart->AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXOVERRUNDISABLE_INIT|UART_ADVFEATURE_DMADISABLEONERROR_INIT;
   _pUart->AdvancedInit.OverrunDisable = UART_ADVFEATURE_OVERRUN_DISABLE;
@@ -106,12 +125,12 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg, const ui
    *  24 June 2016 by Eka, added duplex mode
    */
   if (mode == Mode_Full_Duplex) HAL_UART_Init(_pUart);
-#if UART_HALF_DUPLEX
   if (mode == Mode_Half_Duplex) {
     HAL_HalfDuplex_Init(_pUart);
     HAL_HalfDuplex_EnableReceiver(_pUart);
   }
-#endif
+  _mode = mode;
+  _ctrl = ctrl;
 
   HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
 }
@@ -180,21 +199,19 @@ void UARTClass::flush( void )
 
 size_t UARTClass::write( const uint8_t uc_data )
 {
-#if UART_TX_NON_BLOCKING
-  if(HAL_UART_Transmit_IT(_pUart, (uint8_t *)&uc_data, 1) == HAL_BUSY){
-    tx_buffer.buffer[tx_buffer.iHead] = uc_data;
-    tx_buffer.iHead = (uint32_t)(tx_buffer.iHead + 1) % SERIAL_BUFFER_SIZE;
+  if (_ctrl == Ctrl_Non_Blocking) {
+    if(HAL_UART_Transmit_IT(_pUart, (uint8_t *)&uc_data, 1) == HAL_BUSY){
+      tx_buffer.buffer[tx_buffer.iHead] = uc_data;
+      tx_buffer.iHead = (uint32_t)(tx_buffer.iHead + 1) % SERIAL_BUFFER_SIZE;
+    }
   }
-#else
-#if UART_HALF_DUPLEX
-  HAL_HalfDuplex_EnableTransmitter(_pUart);
-#endif
-  HAL_UART_Transmit(_pUart, (uint8_t *)&uc_data, 1, 10);
-#if UART_HALF_DUPLEX
-  HAL_HalfDuplex_EnableReceiver(_pUart);
-#endif
-  HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
-#endif
+  else {
+    if (_mode == Mode_Half_Duplex) HAL_HalfDuplex_EnableTransmitter(_pUart);
+    HAL_UART_Transmit(_pUart, (uint8_t *)&uc_data, 1, 10);
+    if (_mode == Mode_Half_Duplex) HAL_HalfDuplex_EnableReceiver(_pUart);
+    HAL_UART_Receive_IT(_pUart, (uint8_t *)&r_byte, 1);
+  }
+
   return 1;
 }
 
