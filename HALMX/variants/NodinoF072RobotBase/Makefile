@@ -11,7 +11,7 @@ SRCS += itoa.c syscalls.c wiring_analog.c wiring_digital.c wiring_shift.c wiring
 CXXSRCS = new.cpp Print.cpp RingBuffer.cpp Stream.cpp UARTClass.cpp USARTClass.cpp
 CXXSRCS += USBSerial.cpp WMath.cpp WString.cpp
 CXXSRCS += variant.cpp
-INOSRCS = mdb_receiver.ino
+INOSRCS = F072RobotBase.ino
 
 # all the files will be generated with this name (main.elf, main.bin, main.hex, etc)
 PROJ_NAME=main
@@ -20,7 +20,7 @@ PROJ_NAME=main
 DRIVER=../../drivers
 
 # Location of the linker scripts
-LDSCRIPT_INC=SW4STM32/NodinoF072LED
+LDSCRIPT_INC=SW4STM32/NodinoF072RobotBase
 LINKER=STM32F072C8Tx_FLASH.ld
 
 # location of OpenOCD Board .cfg files (only used with 'make program')
@@ -59,7 +59,7 @@ vpath %.c Src ../../cores/mapleMX
 vpath %.cpp Src ../../cores/mapleMX
 vpath %.s $(DRIVER)/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc
 vpath %.a $(DRIVER)
-vpath %.ino ../../../examples/Communications/mdb_receiver
+vpath %.ino ../../../examples/F072RobotBase/
 
 ROOT=$(shell pwd)
 

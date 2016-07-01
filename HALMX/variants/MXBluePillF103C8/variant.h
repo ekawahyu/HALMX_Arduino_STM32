@@ -133,7 +133,7 @@ typedef struct _Pin2PortMapArray
     
     uint32_t  adc_channel;
     uint32_t  timerNumber;   //Timer1 to Timer4.
-    uint32_t  timerChannel;  //Timer channel (1-4).  
+    uint32_t  timerChannel;  //Timer channel (1-4).
 } Pin2PortMapArray ;
 
 /* Pins table to be instanciated into variant.cpp */

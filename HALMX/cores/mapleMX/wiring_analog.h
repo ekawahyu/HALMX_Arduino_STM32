@@ -19,8 +19,6 @@
 #ifndef _WIRING_ANALOG_
 #define _WIRING_ANALOG_
 
-//#include "stm32f1xx_hal.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -33,6 +31,8 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
+extern TIM_HandleTypeDef htim16;
+extern TIM_HandleTypeDef htim17;
 
 /*
  * \brief SAM3 products have only one reference for ADC
@@ -81,9 +81,9 @@ extern void analogReadResolution(int res);
  */
 extern void analogWriteResolution(int res);
 
-extern void analogOutputInit( void ) ;
+extern void analogOutputInit(void) ;
 
-extern void MX_TIMx_Init(uint32_t 	ulPin);
+extern void MX_TIMx_Init(uint32_t ulPin);
 
 #ifdef __cplusplus
 }

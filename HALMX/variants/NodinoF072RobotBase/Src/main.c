@@ -159,19 +159,19 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   //MX_ADC_Init();
-  MX_TIM3_Init();
+  //MX_TIM3_Init();
   //MX_USART1_UART_Init();
   //MX_USART3_UART_Init();
   //MX_USART4_UART_Init();
   //MX_USB_DEVICE_Init();
-  MX_TIM16_Init();
-  MX_TIM17_Init();
+  //MX_TIM16_Init();
+  //MX_TIM17_Init();
 
   /* USER CODE BEGIN 2 */
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-  HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+  //HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);
+  //HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
 
 #ifdef USE_USBSerial
   StartUSBSerial(); //Start USBSerial.
@@ -194,8 +194,8 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     loop();
-    __HAL_TIM_SET_COMPARE(&htim17, TIM_CHANNEL_1, pulses++);
-    if (pulses > 3000) pulses = 2000;
+    //__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pulses++);
+    //if (pulses > 3000) pulses = 2000;
   }
   /* USER CODE END 3 */
 
@@ -303,7 +303,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 0;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
+  htim3.Init.Period = 3000;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
   {
@@ -356,7 +356,7 @@ static void MX_TIM16_Init(void)
   htim16.Instance = TIM16;
   htim16.Init.Prescaler = 0;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 65535;
+  htim16.Init.Period = 3000;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   if (HAL_TIM_Base_Init(&htim16) != HAL_OK)

@@ -16,10 +16,7 @@
  ****************************************************************************/
 
 #include "Arduino.h"
-//#include <chip.h>
-//#include "wiring_private.h"
 #include "variant.h"
-//#include "pins_arduino.h"
 
 uint8_t analog_reference = DEFAULT;
 TIM_HandleTypeDef* _htimX;
@@ -94,7 +91,6 @@ uint32_t analogRead( uint32_t ulPin ){
   ulValue = HAL_ADC_GetValue(&hadc1);
 
   ulValue = mapResolution(ulValue, 12, _readResolution);
-  //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
  
   return ulValue;
 }
@@ -105,8 +101,27 @@ uint32_t analogRead( uint32_t ulPin ){
  *
  *********************************************************/
 void analogWrite( uint32_t ulPin, uint32_t ulValue ){
+  uint8_t i;
+
+  MX_TIMx_Init(ulPin);
+  __HAL_TIM_SET_COMPARE(_htimX, g_Pin2PortMapArray[ulPin].timerChannel, ulValue);
+
+  /*for (i = 0; i < MAX_PWM_PIN; i++) {
+    if (i == 0 && enabledPWMpins[i] == 0) {
+      MX_TIMx_Init(ulPin);
+      enabledPWMpins[i] = ulPin;
+      break;
+    }
+    if (enabledPWMpins[i] == ulPin)
+      break;
+    else if (enabledPWMpins[i] == 0) {
+      MX_TIMx_Init(ulPin);
+      enabledPWMpins[i] = ulPin;
+      break;
+    }
+  }*/
   /* If previous PWM pin is not the same with the one is used now, check if it has been configured. */
-  if(ulPin != _ulPin){ 
+  /*if(ulPin != _ulPin){
     uint8_t i, res = 0;
     for(i=0;i<MAX_PWM_PIN;i++){
       if(enabledPWMpins[i] == ulPin){
@@ -117,31 +132,32 @@ void analogWrite( uint32_t ulPin, uint32_t ulValue ){
     if(res == 1)
       MX_TIMx_Init(ulPin);
     _ulPin = ulPin;
-  }
+  }*/
   
+  /*
   TIM_OC_InitTypeDef sConfigOC;
   uint32_t ulTemp = 256;
   uint32_t ulChannel = g_Pin2PortMapArray[ulPin].timerChannel;
+  */
   
-  /* Check if the current resolusion is not the same with the previous one */
-  if(writeResolBackup != _writeResolution){
+  /* Check if the current resolution is not the same with the previous one */
+  /*if(writeResolBackup != _writeResolution){
     ulTemp = mapResolution(ulTemp, _writeResolution, 8); 
     writeResolBackup = _writeResolution;
     _htimX->Init.Period = pow(2, _writeResolution);
     HAL_TIM_PWM_Init(_htimX);
-  }
+  }*/
    
    /* Set the new pulse width */
-   if(ulValBackup != ulValue){
+   /*if(ulValBackup != ulValue){
      ulValBackup = ulValue;
      sConfigOC.OCMode = TIM_OCMODE_PWM1;
 		 sConfigOC.Pulse = ulValue;
      HAL_TIM_PWM_ConfigChannel(_htimX, &sConfigOC, ulChannel);
      HAL_TIM_PWM_Start(_htimX, ulChannel);
-   }
-   
-   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+   }*/
 }
+
 
 /*********************************************************
  *  TIMx init function 
@@ -149,7 +165,13 @@ void analogWrite( uint32_t ulPin, uint32_t ulValue ){
  *********************************************************/
 void MX_TIMx_Init(uint32_t ulPin)
 {
-    switch(g_Pin2PortMapArray[ulPin].timerNumber){
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+  TIM_OC_InitTypeDef sConfigOC;
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+  switch(g_Pin2PortMapArray[ulPin].timerNumber) {
     case 1:
       _htimX = &htim1;
       _htimX->Instance = TIM1;
@@ -166,36 +188,57 @@ void MX_TIMx_Init(uint32_t ulPin)
       _htimX = &htim4;
       _htimX->Instance = TIM3;
     break;
+    case 16:
+      _htimX = &htim16;
+      _htimX->Instance = TIM16;
+    break;
+    case 17:
+      _htimX = &htim17;
+      _htimX->Instance = TIM17;
+    break;
   }
-  
-  TIM_MasterConfigTypeDef sMasterConfig;
-  TIM_OC_InitTypeDef sConfigOC;
 
   _htimX->Init.Prescaler = 0;
   _htimX->Init.CounterMode = TIM_COUNTERMODE_UP;
-  _htimX->Init.Period = 255;
+  _htimX->Init.Period = 3000; //255;
   _htimX->Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  _htimX->Init.RepetitionCounter = 0;
+  HAL_TIM_Base_Init(_htimX);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  HAL_TIM_ConfigClockSource(_htimX, &sClockSourceConfig);
+
   HAL_TIM_PWM_Init(_htimX);
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   HAL_TIMEx_MasterConfigSynchronization(_htimX, &sMasterConfig);
 
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = 0;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  HAL_TIMEx_ConfigBreakDeadTime(_htimX, &sBreakDeadTimeConfig);
+
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
   
   HAL_TIM_PWM_ConfigChannel(_htimX, &sConfigOC, g_Pin2PortMapArray[ulPin].timerChannel);
-  
-  GPIO_InitTypeDef GPIO_InitStruct;
+
   GPIO_InitStruct.Pin = g_Pin2PortMapArray[ulPin].Pin_abstraction;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = g_Pin2PortMapArray[ulPin].altFunction;
   HAL_GPIO_Init(g_Pin2PortMapArray[ulPin].GPIOx_Port, &GPIO_InitStruct);
-  if(_htimX->Instance == TIM3)
-    __HAL_AFIO_REMAP_TIM3_PARTIAL();
-  
-  HAL_TIM_PWM_Init(_htimX);
+
   HAL_TIM_PWM_Start(_htimX, g_Pin2PortMapArray[ulPin].timerChannel);
 }
