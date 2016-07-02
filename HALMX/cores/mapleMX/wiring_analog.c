@@ -171,33 +171,10 @@ void MX_TIMx_Init(uint32_t ulPin)
   TIM_OC_InitTypeDef sConfigOC;
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  switch(g_Pin2PortMapArray[ulPin].timerNumber) {
-    case 1:
-      _htimX = &htim1;
-      _htimX->Instance = TIM1;
-    break;
-    case 2:
-      _htimX = &htim2;
-      _htimX->Instance = TIM2;
-    break;
-    case 3:
-      _htimX = &htim3;
-      _htimX->Instance = TIM3;
-    break;
-    case 4:
-      _htimX = &htim4;
-      _htimX->Instance = TIM3;
-    break;
-    case 16:
-      _htimX = &htim16;
-      _htimX->Instance = TIM16;
-    break;
-    case 17:
-      _htimX = &htim17;
-      _htimX->Instance = TIM17;
-    break;
-  }
+  _htimX = variant_get_handle(ulPin);
+  if (_htimX == NULL) return;
 
+  _htimX->Instance = variant_get_instance(ulPin);
   _htimX->Init.Prescaler = 0;
   _htimX->Init.CounterMode = TIM_COUNTERMODE_UP;
   _htimX->Init.Period = 3000; //255;

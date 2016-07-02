@@ -81,6 +81,30 @@ extern UART_HandleTypeDef huart4;
 extern USBD_HandleTypeDef hUsbDeviceFS;
 #endif
 
+#ifdef USE_TIMER1
+extern TIM_HandleTypeDef htim1;
+#endif
+
+#ifdef USE_TIMER2
+extern TIM_HandleTypeDef htim2;
+#endif
+
+#ifdef USE_TIMER3
+extern TIM_HandleTypeDef htim3;
+#endif
+
+#ifdef USE_TIMER4
+extern TIM_HandleTypeDef htim4;
+#endif
+
+#ifdef USE_TIMER16
+extern TIM_HandleTypeDef htim16;
+#endif
+
+#ifdef USE_TIMER17
+extern TIM_HandleTypeDef htim17;
+#endif
+
 enum {
   PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PA8, PA9, PA10, PA11, PA12, PA13, PA14, PA15,
   PB0, PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PB10, PB11, PB12, PB13, PB14, PB15,
@@ -129,6 +153,9 @@ void Tx3_Handler(void);
 void Rx4_Handler(void);
 void Tx4_Handler(void);
 void StartUSBSerial(void);
+
+TIM_HandleTypeDef * variant_get_handle(uint32_t ulPin);
+TIM_TypeDef * variant_get_instance(uint32_t ulPin);
 
 #ifdef __cplusplus
 }

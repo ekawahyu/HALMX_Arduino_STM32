@@ -35,6 +35,7 @@
  */
 
 #include "Arduino.h"
+#include "variant.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -139,3 +140,89 @@ void StartUSBSerial (void){
   Serial.begin(9600);
 }
 #endif
+
+TIM_HandleTypeDef * variant_get_handle(uint32_t ulPin)
+{
+  TIM_HandleTypeDef * htim;
+
+  switch(g_Pin2PortMapArray[ulPin].timerNumber) {
+#ifdef USE_TIMER1
+    case 1:
+      htim = &htim1;
+    break;
+#endif
+#ifdef USE_TIMER2
+    case 2:
+      htim = &htim2;
+    break;
+#endif
+#ifdef USE_TIMER3
+    case 3:
+      htim = &htim3;
+    break;
+#endif
+#ifdef USE_TIMER4
+    case 4:
+      htim = &htim4;
+    break;
+#endif
+#ifdef USE_TIMER16
+    case 16:
+      htim = &htim16;
+    break;
+#endif
+#ifdef USE_TIMER17
+    case 17:
+      htim = &htim17;
+    break;
+#endif
+    default:
+      htim = NULL;
+    break;
+  }
+
+  return htim;
+}
+
+TIM_TypeDef * variant_get_instance(uint32_t ulPin)
+{
+  TIM_TypeDef * instance;
+
+  switch(g_Pin2PortMapArray[ulPin].timerNumber) {
+#ifdef USE_TIMER1
+    case 1:
+      instance = TIM1;
+    break;
+#endif
+#ifdef USE_TIMER2
+    case 2:
+      instance = TIM2;
+    break;
+#endif
+#ifdef USE_TIMER3
+    case 3:
+      instance = TIM3;
+    break;
+#endif
+#ifdef USE_TIMER4
+    case 4:
+      instance = TIM4;
+    break;
+#endif
+#ifdef USE_TIMER16
+    case 16:
+      instance = TIM16;
+    break;
+#endif
+#ifdef USE_TIMER17
+    case 17:
+      instance = TIM17;
+    break;
+#endif
+    default:
+      instance = NULL;
+    break;
+  }
+
+  return instance;
+}
