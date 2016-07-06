@@ -141,7 +141,7 @@ void StartUSBSerial (void){
 }
 #endif
 
-TIM_HandleTypeDef * variant_get_handle(uint32_t ulPin)
+TIM_HandleTypeDef * variant_get_timer_handle(uint32_t ulPin)
 {
   TIM_HandleTypeDef * htim;
 
@@ -184,7 +184,7 @@ TIM_HandleTypeDef * variant_get_handle(uint32_t ulPin)
   return htim;
 }
 
-TIM_TypeDef * variant_get_instance(uint32_t ulPin)
+TIM_TypeDef * variant_get_timer_instance(uint32_t ulPin)
 {
   TIM_TypeDef * instance;
 

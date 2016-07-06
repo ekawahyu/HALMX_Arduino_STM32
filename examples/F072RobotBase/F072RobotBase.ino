@@ -9,6 +9,7 @@
 int dataIn;
 uint32_t counter;
 uint32_t myindex;
+uint16_t motor1, motor2;
 
 void setup() {
   pinMode(LED1, OUTPUT);
@@ -18,11 +19,13 @@ void setup() {
   pinMode(MOTOR2A, OUTPUT);
   pinMode(MOTOR2B, OUTPUT);
 
-  analogWrite (MOTOR1A, 2500);
-  digitalWrite(MOTOR1B, LOW);
-
-  analogWrite (MOTOR2A, 2500);
-  digitalWrite(MOTOR2B, LOW);
+  motor1 = 0;
+  analogWrite (MOTOR1B, motor1);
+  digitalWrite(MOTOR1A, LOW);
+  
+  motor2 = 0;
+  analogWrite (MOTOR2B, motor2);
+  digitalWrite(MOTOR2A, LOW);
   
   Serial.begin(9600); // baudrate is not actually used
   Serial1.begin(9600, SERIAL_HALF_DUPLEX);
@@ -38,6 +41,10 @@ void loop() {
     delay(100);
     digitalWrite(LED1, LOW);
     delay(100);
+    motor1 = 2000 + ((motor1 + 100) % 1000);
+    motor2 = 2000 + ((motor2 + 100) % 1000);
+    analogWrite (MOTOR1B, 5000 - motor1);
+    analogWrite (MOTOR2B, motor2);
     Serial1.print("S1:Hello Receiver!\n");
     Serial1.println(myindex, DEC);
     Serial4.write("S4:Hello Receiver!\n");

@@ -154,8 +154,8 @@ void Rx4_Handler(void);
 void Tx4_Handler(void);
 void StartUSBSerial(void);
 
-TIM_HandleTypeDef * variant_get_handle(uint32_t ulPin);
-TIM_TypeDef * variant_get_instance(uint32_t ulPin);
+TIM_HandleTypeDef * variant_get_timer_handle(uint32_t ulPin);
+TIM_TypeDef * variant_get_timer_instance(uint32_t ulPin);
 
 #ifdef __cplusplus
 }

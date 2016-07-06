@@ -103,59 +103,25 @@ uint32_t analogRead( uint32_t ulPin ){
 void analogWrite( uint32_t ulPin, uint32_t ulValue ){
   uint8_t i;
 
-  MX_TIMx_Init(ulPin);
-  __HAL_TIM_SET_COMPARE(_htimX, g_Pin2PortMapArray[ulPin].timerChannel, ulValue);
+  for (i = 0; i < MAX_PWM_PIN; i++)
+    if (enabledPWMpins[i] == ulPin || enabledPWMpins[i] == 0) break;
 
-  /*for (i = 0; i < MAX_PWM_PIN; i++) {
-    if (i == 0 && enabledPWMpins[i] == 0) {
-      MX_TIMx_Init(ulPin);
-      enabledPWMpins[i] = ulPin;
-      break;
-    }
-    if (enabledPWMpins[i] == ulPin)
-      break;
-    else if (enabledPWMpins[i] == 0) {
-      MX_TIMx_Init(ulPin);
-      enabledPWMpins[i] = ulPin;
-      break;
-    }
-  }*/
-  /* If previous PWM pin is not the same with the one is used now, check if it has been configured. */
-  /*if(ulPin != _ulPin){
-    uint8_t i, res = 0;
-    for(i=0;i<MAX_PWM_PIN;i++){
-      if(enabledPWMpins[i] == ulPin){
-        enabledPWMpins[i] = ulPin;
-        res = 1;
-      }
-    }
-    if(res == 1)
-      MX_TIMx_Init(ulPin);
-    _ulPin = ulPin;
-  }*/
-  
-  /*
-  TIM_OC_InitTypeDef sConfigOC;
-  uint32_t ulTemp = 256;
-  uint32_t ulChannel = g_Pin2PortMapArray[ulPin].timerChannel;
-  */
-  
-  /* Check if the current resolution is not the same with the previous one */
-  /*if(writeResolBackup != _writeResolution){
-    ulTemp = mapResolution(ulTemp, _writeResolution, 8); 
-    writeResolBackup = _writeResolution;
-    _htimX->Init.Period = pow(2, _writeResolution);
-    HAL_TIM_PWM_Init(_htimX);
-  }*/
-   
-   /* Set the new pulse width */
-   /*if(ulValBackup != ulValue){
-     ulValBackup = ulValue;
-     sConfigOC.OCMode = TIM_OCMODE_PWM1;
-		 sConfigOC.Pulse = ulValue;
-     HAL_TIM_PWM_ConfigChannel(_htimX, &sConfigOC, ulChannel);
-     HAL_TIM_PWM_Start(_htimX, ulChannel);
-   }*/
+  /* no slot found */
+  if (i == MAX_PWM_PIN)
+    return;
+
+  /* empty slot found */
+  else if (enabledPWMpins[i] == 0) {
+    MX_TIMx_Init(ulPin);
+    enabledPWMpins[i] = ulPin;
+    __HAL_TIM_SET_COMPARE(_htimX, g_Pin2PortMapArray[ulPin].timerChannel, ulValue);
+  }
+
+  /* slot found and initialized already */
+  else {
+    _htimX = variant_get_timer_handle(ulPin);
+    __HAL_TIM_SET_COMPARE(_htimX, g_Pin2PortMapArray[ulPin].timerChannel, ulValue);
+  }
 }
 
 
@@ -171,10 +137,10 @@ void MX_TIMx_Init(uint32_t ulPin)
   TIM_OC_InitTypeDef sConfigOC;
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  _htimX = variant_get_handle(ulPin);
+  _htimX = variant_get_timer_handle(ulPin);
   if (_htimX == NULL) return;
 
-  _htimX->Instance = variant_get_instance(ulPin);
+  _htimX->Instance = variant_get_timer_instance(ulPin);
   _htimX->Init.Prescaler = 0;
   _htimX->Init.CounterMode = TIM_COUNTERMODE_UP;
   _htimX->Init.Period = 3000; //255;
