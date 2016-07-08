@@ -42,47 +42,46 @@ extern "C" {
 
 extern const Pin2PortMapArray g_Pin2PortMapArray[]=
 {
+    {GPIOA, GPIO_PIN_0,  NO_ADC, NO_PWM, NO_PWM, NO_PWM},        /* PA0 */
+    {GPIOA, GPIO_PIN_1,  NO_ADC, 2,      TIM_CHANNEL_2, NO_PWM}, /* PA1 */
+    {GPIOA, GPIO_PIN_2,  NO_ADC, 2,      TIM_CHANNEL_3, NO_PWM}, /* PA2 */
+    {GPIOA, GPIO_PIN_3,  NO_ADC, 2,      TIM_CHANNEL_4, NO_PWM}, /* PA3 */
+    {GPIOA, GPIO_PIN_4,  NO_ADC, 14,     TIM_CHANNEL_1, NO_PWM}, /* PA4 */
+    {GPIOA, GPIO_PIN_5,  NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA5 */
+    {GPIOA, GPIO_PIN_6,  NO_ADC, 3,      TIM_CHANNEL_1, NO_PWM}, /* PA6 */
+    {GPIOA, GPIO_PIN_7,  NO_ADC, 3,      TIM_CHANNEL_2, NO_PWM}, /* PA7 */
+    {GPIOA, GPIO_PIN_8,  NO_ADC, 1,      TIM_CHANNEL_1, NO_PWM}, /* PA8 */
+    {GPIOA, GPIO_PIN_9,  NO_ADC, 1,      TIM_CHANNEL_2, NO_PWM}, /* PA9 */
+    {GPIOA, GPIO_PIN_10, NO_ADC, 1,      TIM_CHANNEL_3, NO_PWM}, /* PA10 */
+    {GPIOA, GPIO_PIN_11, NO_ADC, 1,      TIM_CHANNEL_4, NO_PWM}, /* PA11 */
+    {GPIOA, GPIO_PIN_12, NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA12 */
+    {GPIOA, GPIO_PIN_13, NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA13 */
+    {GPIOA, GPIO_PIN_14, NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA14 */
+    {GPIOA, GPIO_PIN_15, NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA15 */
 
-    {GPIOA, GPIO_PIN_0,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_1,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_2,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_3,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_4,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_5,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_6,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_7,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_8,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_9,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_10, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_11, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_12, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_13, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_14, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOA, GPIO_PIN_15, NO_ADC, NO_PWM, NO_PWM},
+    {GPIOB, GPIO_PIN_0,  NO_ADC, 3,      TIM_CHANNEL_3, GPIO_AF1_TIM3},  /* PB0 */
+    {GPIOB, GPIO_PIN_1,  NO_ADC, 3,      TIM_CHANNEL_4, GPIO_AF1_TIM3},  /* PB1 */
+    {GPIOB, GPIO_PIN_2,  NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PB2 */
+    {GPIOB, GPIO_PIN_3,  NO_ADC, 2,      TIM_CHANNEL_2, NO_PWM},         /* PB3 */
+    {GPIOB, GPIO_PIN_4,  NO_ADC, 3,      TIM_CHANNEL_1, NO_PWM},         /* PB4 */
+    {GPIOB, GPIO_PIN_5,  NO_ADC, 3,      TIM_CHANNEL_2, NO_PWM},         /* PB5 */
+    {GPIOB, GPIO_PIN_6,  NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PB6 */
+    {GPIOB, GPIO_PIN_7,  NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PB7 */
+    {GPIOB, GPIO_PIN_8,  NO_ADC, 16,     TIM_CHANNEL_1, GPIO_AF2_TIM16}, /* PB8 */
+    {GPIOB, GPIO_PIN_9,  NO_ADC, 17,     TIM_CHANNEL_1, GPIO_AF2_TIM17}, /* PB9 */
+    {GPIOB, GPIO_PIN_10, NO_ADC, 2,      TIM_CHANNEL_3, NO_PWM},         /* PB10 */
+    {GPIOB, GPIO_PIN_11, NO_ADC, 2,      TIM_CHANNEL_4, NO_PWM},         /* PB11 */
+    {GPIOB, GPIO_PIN_12, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PB12 */
+    {GPIOB, GPIO_PIN_13, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PB13 */
+    {GPIOB, GPIO_PIN_14, NO_ADC, 15,     TIM_CHANNEL_1, NO_PWM},         /* PB14 */
+    {GPIOB, GPIO_PIN_15, NO_ADC, 15,     TIM_CHANNEL_2, NO_PWM},         /* PB15 */
 
-    {GPIOB, GPIO_PIN_0,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_1,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_2,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_3,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_4,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_5,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_6,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_7,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_8,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_9,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_10, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_11, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_12, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_13, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_14, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOB, GPIO_PIN_15, NO_ADC, NO_PWM, NO_PWM},
+    {GPIOC, GPIO_PIN_13, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PC13 */
+    {GPIOC, GPIO_PIN_14, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PC14 */
+    {GPIOC, GPIO_PIN_15, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PC15 */
 
-    {GPIOC, GPIO_PIN_13, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOC, GPIO_PIN_14, NO_ADC, NO_PWM, NO_PWM},
-    {GPIOC, GPIO_PIN_15, NO_ADC, NO_PWM, NO_PWM},
-
-    {GPIOF, GPIO_PIN_0,  NO_ADC, NO_PWM, NO_PWM},
-    {GPIOF, GPIO_PIN_1,  NO_ADC, NO_PWM, NO_PWM}
+    {GPIOF, GPIO_PIN_0,  NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PF0 */
+    {GPIOF, GPIO_PIN_1,  NO_ADC, NO_PWM, NO_PWM,        NO_PWM}          /* PF1 */
 };
 
 #ifdef __cplusplus
@@ -140,3 +139,89 @@ void StartUSBSerial (void){
   Serial.begin(9600);
 }
 #endif
+
+TIM_HandleTypeDef * variant_get_timer_handle(uint32_t ulPin)
+{
+  TIM_HandleTypeDef * htim;
+
+  switch(g_Pin2PortMapArray[ulPin].timerNumber) {
+#ifdef USE_TIMER1
+    case 1:
+      htim = &htim1;
+    break;
+#endif
+#ifdef USE_TIMER2
+    case 2:
+      htim = &htim2;
+    break;
+#endif
+#ifdef USE_TIMER3
+    case 3:
+      htim = &htim3;
+    break;
+#endif
+#ifdef USE_TIMER4
+    case 4:
+      htim = &htim4;
+    break;
+#endif
+#ifdef USE_TIMER16
+    case 16:
+      htim = &htim16;
+    break;
+#endif
+#ifdef USE_TIMER17
+    case 17:
+      htim = &htim17;
+    break;
+#endif
+    default:
+      htim = NULL;
+    break;
+  }
+
+  return htim;
+}
+
+TIM_TypeDef * variant_get_timer_instance(uint32_t ulPin)
+{
+  TIM_TypeDef * instance;
+
+  switch(g_Pin2PortMapArray[ulPin].timerNumber) {
+#ifdef USE_TIMER1
+    case 1:
+      instance = TIM1;
+    break;
+#endif
+#ifdef USE_TIMER2
+    case 2:
+      instance = TIM2;
+    break;
+#endif
+#ifdef USE_TIMER3
+    case 3:
+      instance = TIM3;
+    break;
+#endif
+#ifdef USE_TIMER4
+    case 4:
+      instance = TIM4;
+    break;
+#endif
+#ifdef USE_TIMER16
+    case 16:
+      instance = TIM16;
+    break;
+#endif
+#ifdef USE_TIMER17
+    case 17:
+      instance = TIM17;
+    break;
+#endif
+    default:
+      instance = NULL;
+    break;
+  }
+
+  return instance;
+}

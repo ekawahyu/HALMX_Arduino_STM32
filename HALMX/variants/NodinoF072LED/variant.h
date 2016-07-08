@@ -114,6 +114,7 @@ typedef struct _Pin2PortMapArray
     uint32_t  adc_channel;
     uint32_t  timerNumber;   //Timer1 to Timer4.
     uint32_t  timerChannel;  //Timer channel (1-4).
+    uint32_t  altFunction;   //Alternate Function.
 } Pin2PortMapArray;
 
 /* Pins table to be instantiated into variant.cpp */
@@ -128,6 +129,9 @@ void Tx3_Handler(void);
 void Rx4_Handler(void);
 void Tx4_Handler(void);
 void StartUSBSerial(void);
+
+TIM_HandleTypeDef * variant_get_timer_handle(uint32_t ulPin);
+TIM_TypeDef * variant_get_timer_instance(uint32_t ulPin);
 
 #ifdef __cplusplus
 }

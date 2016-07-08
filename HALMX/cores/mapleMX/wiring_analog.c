@@ -106,17 +106,17 @@ void analogWrite( uint32_t ulPin, uint32_t ulValue ){
   for (i = 0; i < MAX_PWM_PIN; i++)
     if (enabledPWMpins[i] == ulPin || enabledPWMpins[i] == 0) break;
 
+  ulValue = mapResolution(ulValue, _writeResolution, 12);
+
   /* no slot found */
   if (i == MAX_PWM_PIN)
     return;
-
   /* empty slot found */
   else if (enabledPWMpins[i] == 0) {
     MX_TIMx_Init(ulPin);
     enabledPWMpins[i] = ulPin;
     __HAL_TIM_SET_COMPARE(_htimX, g_Pin2PortMapArray[ulPin].timerChannel, ulValue);
   }
-
   /* slot found and initialized already */
   else {
     _htimX = variant_get_timer_handle(ulPin);
@@ -143,7 +143,7 @@ void MX_TIMx_Init(uint32_t ulPin)
   _htimX->Instance = variant_get_timer_instance(ulPin);
   _htimX->Init.Prescaler = 0;
   _htimX->Init.CounterMode = TIM_COUNTERMODE_UP;
-  _htimX->Init.Period = 3000; //255;
+  _htimX->Init.Period = 4095; //255;
   _htimX->Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   _htimX->Init.RepetitionCounter = 0;
   HAL_TIM_Base_Init(_htimX);
