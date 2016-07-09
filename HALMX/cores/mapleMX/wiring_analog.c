@@ -23,6 +23,7 @@ TIM_HandleTypeDef* _htimX;
 
 static int _readResolution = 10;
 static int _writeResolution = 8;
+static int _writeFrequency = 1000;
 int readResolBackup = -1;
 int writeResolBackup = -1;
 uint32_t ulValBackup = 0;
@@ -43,6 +44,14 @@ void analogReadResolution(int res) {
  *********************************************************/
 void analogWriteResolution(int res) {
 	_writeResolution = res;
+}
+
+/*********************************************************
+ *
+ *
+ *********************************************************/
+void analogWriteFrequency(int freq) {
+  _writeFrequency = freq;
 }
 
 /*********************************************************
@@ -143,7 +152,7 @@ void MX_TIMx_Init(uint32_t ulPin)
   _htimX->Instance = variant_get_timer_instance(ulPin);
   _htimX->Init.Prescaler = 0;
   _htimX->Init.CounterMode = TIM_COUNTERMODE_UP;
-  _htimX->Init.Period = 4095; //255;
+  _htimX->Init.Period = SystemCoreClock / _writeFrequency;
   _htimX->Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   _htimX->Init.RepetitionCounter = 0;
   HAL_TIM_Base_Init(_htimX);

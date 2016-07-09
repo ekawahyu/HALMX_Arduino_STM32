@@ -28,11 +28,11 @@ void robot_stop(void)
 void robot_forward(void)
 {
   /* go forward */
-  motor1 = 4095;
+  motor1 = 3500;
   analogWrite (MOTOR1B, motor1);
   analogWrite(MOTOR1A, 0);
   
-  motor2 = 4095;
+  motor2 = 3500;
   analogWrite (MOTOR2B, motor2);
   analogWrite(MOTOR2A, 0);
 
@@ -42,11 +42,11 @@ void robot_forward(void)
 void robot_backward(void)
 {
   /* go forward */
-  motor1 = 4095;
+  motor1 = 3500;
   analogWrite (MOTOR1B, 0);
   analogWrite(MOTOR1A, motor1);
   
-  motor2 = 4095;
+  motor2 = 3500;
   analogWrite (MOTOR2B, 0);
   analogWrite(MOTOR2A, motor2);
 
@@ -56,7 +56,7 @@ void robot_backward(void)
 void robot_turn_left(void)
 {
   /* turn 90 degree to the left */
-  motor1 = 4095;
+  motor1 = 3500;
   analogWrite (MOTOR1B, motor1);
   analogWrite(MOTOR1A, 0);
   
@@ -70,11 +70,11 @@ void robot_turn_left(void)
 void robot_rotate_left(void)
 {
   /* rotate 90 degree to the left */
-  motor1 = 4095;
+  motor1 = 3500;
   analogWrite (MOTOR1B, motor1);
   analogWrite(MOTOR1A, 0);
   
-  motor2 = 4095;
+  motor2 = 3500;
   analogWrite(MOTOR2B, 0);
   analogWrite (MOTOR2A, motor2);
 
@@ -88,7 +88,7 @@ void robot_turn_right(void)
   analogWrite (MOTOR1B, motor1);
   analogWrite(MOTOR1A, 0);
   
-  motor2 = 4095;
+  motor2 = 3500;
   analogWrite (MOTOR2B, motor2);
   analogWrite(MOTOR2A, 0);
 
@@ -98,11 +98,11 @@ void robot_turn_right(void)
 void robot_rotate_right(void)
 {
   /* rotate 90 degree to the right */
-  motor1 = 4095;
+  motor1 = 3500;
   analogWrite(MOTOR1B, 0);
   analogWrite (MOTOR1A, motor1);
   
-  motor2 = 4095;
+  motor2 = 3500;
   analogWrite (MOTOR2B, motor2);
   analogWrite(MOTOR2A, 0);
 
@@ -113,6 +113,7 @@ void setup() {
   pinMode(LED1, OUTPUT);
 
   analogWriteResolution(12);
+  analogWriteFrequency(12000);
   analogWrite(MOTOR1A, 0);
   analogWrite(MOTOR1B, 0);
   analogWrite(MOTOR2A, 0);

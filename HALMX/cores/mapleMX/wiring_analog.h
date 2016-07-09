@@ -74,6 +74,13 @@ extern void analogReadResolution(int res);
  */
 extern void analogWriteResolution(int res);
 
+/*
+ * \brief Set the frequency of analogWrite parameters. Default is 1000 Hz.
+ *
+ * \param res
+ */
+extern void analogWriteFrequency(int freq);
+
 extern void analogOutputInit(void) ;
 
 extern void MX_TIMx_Init(uint32_t ulPin);
