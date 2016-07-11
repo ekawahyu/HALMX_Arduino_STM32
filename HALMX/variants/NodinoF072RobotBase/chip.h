@@ -71,6 +71,7 @@
 #define USE_USART4
 
 #define USE_TIMER3
+#define USE_TIMER14
 #define USE_TIMER16
 #define USE_TIMER17
 

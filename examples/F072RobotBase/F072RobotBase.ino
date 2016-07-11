@@ -5,11 +5,13 @@
 #define MOTOR1B   PB1
 #define MOTOR2A   PB8
 #define MOTOR2B   PB9
+#define BUZZER    PA4
 
 int dataIn;
 uint32_t counter;
 uint32_t myindex;
 uint16_t motor1, motor2;
+uint16_t note;
 
 void robot_stop(void)
 {
@@ -113,10 +115,16 @@ void setup() {
   pinMode(LED1, OUTPUT);
 
   analogWriteResolution(12);
-  analogWriteFrequency(12000);
+  note = 400;
+  analogWriteFrequency(BUZZER, note);
+  analogWrite(BUZZER, 10);
+  analogWriteFrequency(MOTOR1A, 12000);
   analogWrite(MOTOR1A, 0);
+  analogWriteFrequency(MOTOR1B, 12000);
   analogWrite(MOTOR1B, 0);
+  analogWriteFrequency(MOTOR2A, 12000);
   analogWrite(MOTOR2A, 0);
+  analogWriteFrequency(MOTOR2B, 12000);
   analogWrite(MOTOR2B, 0);
   
   Serial.begin(9600); // baudrate is not actually used
@@ -133,6 +141,7 @@ void loop() {
     delay(100);
     digitalWrite(LED1, LOW);
     delay(100);
+    analogWriteFrequency(BUZZER, note++);
     Serial1.print("S1:Hello Receiver!\n");
     Serial1.println(myindex, DEC);
     Serial4.write("S4:Hello Receiver!\n");

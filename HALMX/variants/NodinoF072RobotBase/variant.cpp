@@ -43,22 +43,22 @@ extern "C" {
 
 extern const Pin2PortMapArray g_Pin2PortMapArray[]=
 {
-    {GPIOA, GPIO_PIN_0,  NO_ADC, NO_PWM, NO_PWM, NO_PWM},        /* PA0 */
-    {GPIOA, GPIO_PIN_1,  NO_ADC, 2,      TIM_CHANNEL_2, NO_PWM}, /* PA1 */
-    {GPIOA, GPIO_PIN_2,  NO_ADC, 2,      TIM_CHANNEL_3, NO_PWM}, /* PA2 */
-    {GPIOA, GPIO_PIN_3,  NO_ADC, 2,      TIM_CHANNEL_4, NO_PWM}, /* PA3 */
-    {GPIOA, GPIO_PIN_4,  NO_ADC, 14,     TIM_CHANNEL_1, NO_PWM}, /* PA4 */
-    {GPIOA, GPIO_PIN_5,  NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA5 */
-    {GPIOA, GPIO_PIN_6,  NO_ADC, 3,      TIM_CHANNEL_1, NO_PWM}, /* PA6 */
-    {GPIOA, GPIO_PIN_7,  NO_ADC, 3,      TIM_CHANNEL_2, NO_PWM}, /* PA7 */
-    {GPIOA, GPIO_PIN_8,  NO_ADC, 1,      TIM_CHANNEL_1, NO_PWM}, /* PA8 */
-    {GPIOA, GPIO_PIN_9,  NO_ADC, 1,      TIM_CHANNEL_2, NO_PWM}, /* PA9 */
-    {GPIOA, GPIO_PIN_10, NO_ADC, 1,      TIM_CHANNEL_3, NO_PWM}, /* PA10 */
-    {GPIOA, GPIO_PIN_11, NO_ADC, 1,      TIM_CHANNEL_4, NO_PWM}, /* PA11 */
-    {GPIOA, GPIO_PIN_12, NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA12 */
-    {GPIOA, GPIO_PIN_13, NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA13 */
-    {GPIOA, GPIO_PIN_14, NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA14 */
-    {GPIOA, GPIO_PIN_15, NO_ADC, NO_PWM, NO_PWM,        NO_PWM}, /* PA15 */
+    {GPIOA, GPIO_PIN_0,  NO_ADC, NO_PWM, NO_PWM, NO_PWM},                /* PA0 */
+    {GPIOA, GPIO_PIN_1,  NO_ADC, 2,      TIM_CHANNEL_2, NO_PWM},         /* PA1 */
+    {GPIOA, GPIO_PIN_2,  NO_ADC, 2,      TIM_CHANNEL_3, NO_PWM},         /* PA2 */
+    {GPIOA, GPIO_PIN_3,  NO_ADC, 2,      TIM_CHANNEL_4, NO_PWM},         /* PA3 */
+    {GPIOA, GPIO_PIN_4,  NO_ADC, 14,     TIM_CHANNEL_1, GPIO_AF4_TIM14}, /* PA4 */
+    {GPIOA, GPIO_PIN_5,  NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PA5 */
+    {GPIOA, GPIO_PIN_6,  NO_ADC, 3,      TIM_CHANNEL_1, NO_PWM},         /* PA6 */
+    {GPIOA, GPIO_PIN_7,  NO_ADC, 3,      TIM_CHANNEL_2, NO_PWM},         /* PA7 */
+    {GPIOA, GPIO_PIN_8,  NO_ADC, 1,      TIM_CHANNEL_1, NO_PWM},         /* PA8 */
+    {GPIOA, GPIO_PIN_9,  NO_ADC, 1,      TIM_CHANNEL_2, NO_PWM},         /* PA9 */
+    {GPIOA, GPIO_PIN_10, NO_ADC, 1,      TIM_CHANNEL_3, NO_PWM},         /* PA10 */
+    {GPIOA, GPIO_PIN_11, NO_ADC, 1,      TIM_CHANNEL_4, NO_PWM},         /* PA11 */
+    {GPIOA, GPIO_PIN_12, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PA12 */
+    {GPIOA, GPIO_PIN_13, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PA13 */
+    {GPIOA, GPIO_PIN_14, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PA14 */
+    {GPIOA, GPIO_PIN_15, NO_ADC, NO_PWM, NO_PWM,        NO_PWM},         /* PA15 */
 
     {GPIOB, GPIO_PIN_0,  NO_ADC, 3,      TIM_CHANNEL_3, GPIO_AF1_TIM3},  /* PB0 */
     {GPIOB, GPIO_PIN_1,  NO_ADC, 3,      TIM_CHANNEL_4, GPIO_AF1_TIM3},  /* PB1 */
@@ -166,6 +166,11 @@ TIM_HandleTypeDef * variant_get_timer_handle(uint32_t ulPin)
       htim = &htim4;
     break;
 #endif
+#ifdef USE_TIMER14
+    case 14:
+      htim = &htim14;
+    break;
+#endif
 #ifdef USE_TIMER16
     case 16:
       htim = &htim16;
@@ -207,6 +212,11 @@ TIM_TypeDef * variant_get_timer_instance(uint32_t ulPin)
 #ifdef USE_TIMER4
     case 4:
       instance = TIM4;
+    break;
+#endif
+#ifdef USE_TIMER14
+    case 14:
+      instance = TIM14;
     break;
 #endif
 #ifdef USE_TIMER16

@@ -97,6 +97,10 @@ extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 #endif
 
+#ifdef USE_TIMER14
+extern TIM_HandleTypeDef htim14;
+#endif
+
 #ifdef USE_TIMER16
 extern TIM_HandleTypeDef htim16;
 #endif

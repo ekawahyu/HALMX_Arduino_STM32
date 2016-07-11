@@ -150,12 +150,12 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  //MX_ADC_Init();
-  //MX_TIM3_Init();
-  //MX_USART1_UART_Init();
-  //MX_USART3_UART_Init();
-  //MX_USART4_UART_Init();
-  //MX_USB_DEVICE_Init();
+//  MX_ADC_Init();
+//  MX_TIM3_Init();
+//  MX_USART1_UART_Init();
+//  MX_USART3_UART_Init();
+//  MX_USART4_UART_Init();
+//  MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -208,7 +208,7 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI48;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();

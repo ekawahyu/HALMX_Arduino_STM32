@@ -50,8 +50,20 @@ void analogWriteResolution(int res) {
  *
  *
  *********************************************************/
-void analogWriteFrequency(int freq) {
+uint32_t analogWriteFrequency(uint32_t ulPin, int freq) {
+  uint8_t i;
+
+  _htimX = 0;
   _writeFrequency = freq;
+
+  for (i = 0; i < MAX_PWM_PIN; i++) {
+    if (enabledPWMpins[i] == ulPin) {
+      _htimX = variant_get_timer_handle(ulPin);
+      __HAL_TIM_SET_AUTORELOAD(_htimX, SystemCoreClock / _writeFrequency);
+    }
+  }
+
+  return _htimX ? __HAL_TIM_GET_AUTORELOAD(_htimX) : 0;
 }
 
 /*********************************************************
@@ -109,8 +121,13 @@ uint32_t analogRead( uint32_t ulPin ){
  * Writes the <ulValue> value to the PWM <ulPin> pin. 
  *
  *********************************************************/
-void analogWrite( uint32_t ulPin, uint32_t ulValue ){
+void analogWrite(uint32_t ulPin, uint32_t ulValue ){
   uint8_t i;
+  uint32_t ulTimerNumber;
+
+  ulTimerNumber = g_Pin2PortMapArray[ulPin].timerNumber;
+
+  if (ulTimerNumber == NO_PWM) return;
 
   for (i = 0; i < MAX_PWM_PIN; i++)
     if (enabledPWMpins[i] == ulPin || enabledPWMpins[i] == 0) break;

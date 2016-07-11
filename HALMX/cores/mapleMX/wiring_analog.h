@@ -79,7 +79,7 @@ extern void analogWriteResolution(int res);
  *
  * \param res
  */
-extern void analogWriteFrequency(int freq);
+extern uint32_t analogWriteFrequency(uint32_t ulPin, int freq);
 
 extern void analogOutputInit(void) ;
 
