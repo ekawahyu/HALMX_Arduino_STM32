@@ -1,4 +1,4 @@
-MODULE_NAME=Sound
+MODULE_NAME=LED
 ARM_NONE_EABI_BIN=/Users/nodino/gcc-arm-none-eabi/bin
 OPENOCD_HOME=/opt/local
 DFU_UTIL_HOME=/opt/local
