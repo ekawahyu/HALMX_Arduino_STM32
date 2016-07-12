@@ -10,7 +10,7 @@ SRCS += stm32f0xx_hal_msp.c stm32f0xx_it.c
 SRCS += usbd_cdc_if.c usbd_conf.c usbd_desc.c usb_device.c
 SRCS += itoa.c syscalls.c wiring_analog.c wiring_digital.c wiring_shift.c wiring.c
 CXXSRCS = new.cpp Print.cpp RingBuffer.cpp Stream.cpp UARTClass.cpp USARTClass.cpp
-CXXSRCS += USBSerial.cpp WMath.cpp WString.cpp
+CXXSRCS += USBSerial.cpp WMath.cpp WString.cpp Tone.cpp
 CXXSRCS += variant.cpp
 INOSRCS = $(MODULE_NAME).ino
 
@@ -60,7 +60,7 @@ vpath %.c Src ../../cores/mapleMX
 vpath %.cpp Src ../../cores/mapleMX
 vpath %.s $(DRIVER)/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc
 vpath %.a $(DRIVER)
-vpath %.ino ../../../examples/Nodino072/$(MODULE_NAME)
+vpath %.ino ../../../examples/NodinoF072/$(MODULE_NAME)
 
 ROOT=$(shell pwd)
 
