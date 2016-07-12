@@ -5,6 +5,49 @@ menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
 
 ##############################################################
+NodinoF072Sound.name=F072-Sound
+
+NodinoF072Sound.upload.file_type=bin
+NodinoF072Sound.upload.flash.maximum_size=64k
+NodinoF072Sound.upload.ram.maximum_size=16k
+
+NodinoF072Sound.build.mcu=cortex-m0
+NodinoF072Sound.build.f_cpu=48000000L
+NodinoF072Sound.build.board=HALMX_NODINOF072SOUND
+NodinoF072Sound.build.core=mapleMX
+NodinoF072Sound.build.variant=NodinoF072Sound
+
+NodinoF072Sound.build.CMSISInc=STM32F0xx/Include
+NodinoF072Sound.build.DRIVERS=STM32F0xx_HAL_Driver/Inc
+NodinoF072Sound.build.common_flags=-mthumb -D__STM32F0__
+NodinoF072Sound.build.extra_flags=-DSTM32F072xB
+NodinoF072Sound.build.ldscript=SW4STM32/NodinoF072Sound/STM32F072C8Tx_FLASH.ld
+
+NodinoF072Sound.menu.upload_method.STLinkMethod=STLink
+NodinoF072Sound.menu.upload_method.STLinkMethod.upload.protocol=STLink
+NodinoF072Sound.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+
+NodinoF072Sound.menu.upload_method.OpenOCDSTLinkMethod=OpenOCD-STLink
+NodinoF072Sound.menu.upload_method.OpenOCDSTLinkMethod.upload.protocol=OpenOCD
+NodinoF072Sound.menu.upload_method.OpenOCDSTLinkMethod.upload.transport=swd
+NodinoF072Sound.menu.upload_method.OpenOCDSTLinkMethod.upload.tool=openocd_upload
+NodinoF072Sound.menu.upload_method.OpenOCDSTLinkMethod.upload.interface=stlink-v2
+NodinoF072Sound.menu.upload_method.OpenOCDSTLinkMethod.upload.target=stm32f0x
+
+NodinoF072Sound.menu.upload_method.OpenOCDJLinkMethod=OpenOCD-JLink
+NodinoF072Sound.menu.upload_method.OpenOCDJLinkMethod.upload.protocol=OpenOCD
+NodinoF072Sound.menu.upload_method.OpenOCDJLinkMethod.upload.transport=swd
+NodinoF072Sound.menu.upload_method.OpenOCDJLinkMethod.upload.tool=openocd_upload
+NodinoF072Sound.menu.upload_method.OpenOCDJLinkMethod.upload.interface=jlink
+NodinoF072Sound.menu.upload_method.OpenOCDJLinkMethod.upload.target=stm32f0x
+
+NodinoF072Sound.menu.upload_method.DFUUploadMethod=STM32DFU
+NodinoF072Sound.menu.upload_method.DFUUploadMethod.upload.protocol=STM32DFU
+NodinoF072Sound.menu.upload_method.DFUUploadMethod.upload.tool=dfu_upload
+NodinoF072Sound.menu.upload_method.DFUUploadMethod.upload.usbID=0483:df11
+NodinoF072Sound.menu.upload_method.DFUUploadMethod.upload.altID=0
+
+##############################################################
 NodinoF072RobotBase.name=F072-RobotBase
 
 NodinoF072RobotBase.upload.file_type=bin

@@ -1,2 +1,3 @@
 Serial4	KEYWORD2	Serial4
 analogWriteFrequency	KEYWORD2	AnalogWriteFrequency
+toneVolume	KEYWORD2	toneVolume

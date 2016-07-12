@@ -1,3 +1,4 @@
+MODULE_NAME=RobotBase
 ARM_NONE_EABI_BIN=/Users/nodino/gcc-arm-none-eabi/bin
 OPENOCD_HOME=/opt/local
 DFU_UTIL_HOME=/opt/local
@@ -11,7 +12,7 @@ SRCS += itoa.c syscalls.c wiring_analog.c wiring_digital.c wiring_shift.c wiring
 CXXSRCS = new.cpp Print.cpp RingBuffer.cpp Stream.cpp UARTClass.cpp USARTClass.cpp
 CXXSRCS += USBSerial.cpp WMath.cpp WString.cpp
 CXXSRCS += variant.cpp
-INOSRCS = F072RobotBase.ino
+INOSRCS = $(MODULE_NAME).ino
 
 # all the files will be generated with this name (main.elf, main.bin, main.hex, etc)
 PROJ_NAME=main
@@ -20,7 +21,7 @@ PROJ_NAME=main
 DRIVER=../../drivers
 
 # Location of the linker scripts
-LDSCRIPT_INC=SW4STM32/NodinoF072RobotBase
+LDSCRIPT_INC=SW4STM32/NodinoF072$(MODULE_NAME)
 LINKER=STM32F072C8Tx_FLASH.ld
 
 # location of OpenOCD Board .cfg files (only used with 'make program')
@@ -59,7 +60,7 @@ vpath %.c Src ../../cores/mapleMX
 vpath %.cpp Src ../../cores/mapleMX
 vpath %.s $(DRIVER)/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc
 vpath %.a $(DRIVER)
-vpath %.ino ../../../examples/F072RobotBase/
+vpath %.ino ../../../examples/Nodino072/$(MODULE_NAME)
 
 ROOT=$(shell pwd)
 
