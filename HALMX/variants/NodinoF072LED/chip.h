@@ -67,8 +67,12 @@
 #define USE_USBSerial
 
 #define USE_USART1
-//#define USE_USART2
 #define USE_USART3
 #define USE_USART4
+
+#define USE_TIMER3
+#define USE_TIMER14
+#define USE_TIMER16
+#define USE_TIMER17
 
 #endif /* INC_CHIP_STM32F072C8_H_ */
