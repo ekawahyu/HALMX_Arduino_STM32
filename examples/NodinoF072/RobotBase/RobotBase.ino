@@ -124,79 +124,14 @@ void setup() {
 
   analogWriteResolution(12);
   
-//  analogWriteFrequency(MOTOR1A, 12000);
-//  analogWrite(MOTOR1A, 0);
-//  analogWriteFrequency(MOTOR1B, 12000);
-//  analogWrite(MOTOR1B, 0);
-//  analogWriteFrequency(MOTOR2A, 12000);
-//  analogWrite(MOTOR2A, 0);
-//  analogWriteFrequency(MOTOR2B, 12000);
-//  analogWrite(MOTOR2B, 0);
-
-  toneVolume(10);
-  
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_G4, 750);
-  tone(BUZZER, NOTE_E4, 250);
-  tone(BUZZER, NOTE_E4, 500);
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_G4, 750);
-  tone(BUZZER, NOTE_D4, 250);
-  tone(BUZZER, NOTE_D4, 500);
-  
-  tone(BUZZER, NOTE_E4, 500);
-  tone(BUZZER, NOTE_F4, 500);
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_A4, 500);
-  tone(BUZZER, NOTE_B4, 500);
-  tone(BUZZER, NOTE_G4, 1500);
-
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_G4, 750);
-  tone(BUZZER, NOTE_E4, 250);
-  tone(BUZZER, NOTE_E4, 500);
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_G4, 750);
-  tone(BUZZER, NOTE_D4, 250);
-  tone(BUZZER, NOTE_D4, 500);
-
-  tone(BUZZER, NOTE_D5, 500);
-  tone(BUZZER, NOTE_CS5,500);
-  tone(BUZZER, NOTE_D5, 500);
-  tone(BUZZER, NOTE_E5, 500);
-  tone(BUZZER, NOTE_A4, 500);
-  tone(BUZZER, NOTE_D5, 1500);
-
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_E5, 750);
-  tone(BUZZER, NOTE_E5, 250);
-  tone(BUZZER, NOTE_D5, 500);
-  tone(BUZZER, NOTE_C5, 500);
-  tone(BUZZER, NOTE_C5, 750);
-  tone(BUZZER, NOTE_B4, 250);
-  tone(BUZZER, NOTE_B4, 500);
-
-  tone(BUZZER, NOTE_C5, 500);
-  tone(BUZZER, NOTE_D5, 500);
-  tone(BUZZER, NOTE_B4, 500);
-  tone(BUZZER, NOTE_A4, 500);
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_C5, 1500);
-  
-  tone(BUZZER, NOTE_C5, 500);
-  tone(BUZZER, NOTE_C5, 750);
-  tone(BUZZER, NOTE_A4, 250);
-  tone(BUZZER, NOTE_A4, 500);
-  tone(BUZZER, NOTE_C5, 500);
-  tone(BUZZER, NOTE_C5, 750);
-  tone(BUZZER, NOTE_G4, 250);
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_A4, 500);
-  tone(BUZZER, NOTE_C5, 500);
-  tone(BUZZER, NOTE_G4, 500);
-  tone(BUZZER, NOTE_D5, 500);
-  tone(BUZZER, NOTE_C5, 1500);
+  analogWriteFrequency(MOTOR1A, 12000);
+  analogWrite(MOTOR1A, 0);
+  analogWriteFrequency(MOTOR1B, 12000);
+  analogWrite(MOTOR1B, 0);
+  analogWriteFrequency(MOTOR2A, 12000);
+  analogWrite(MOTOR2A, 0);
+  analogWriteFrequency(MOTOR2B, 12000);
+  analogWrite(MOTOR2B, 0);
 }
 
 void loop() {
@@ -213,11 +148,11 @@ void loop() {
     Serial4.println(myindex, DEC);
   }
   
-  //robot_forward();
-  //robot_stop();
+  robot_forward();
+  robot_stop();
   
-  //robot_backward();
-  //robot_stop();
+  robot_backward();
+  robot_stop();
   
   dataIn = Serial4.read();
   if (dataIn >= 0)
