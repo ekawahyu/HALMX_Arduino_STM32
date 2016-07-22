@@ -93,6 +93,7 @@ extern const Pin2PortMapArray g_Pin2PortMapArray[]=
  * ----------------------------------------------------------------------------*/
 
 #ifdef USE_USART1
+UART_HandleTypeDef huart1;
 UARTClass Serial1(&huart1, USART1_IRQn, 0, USART1);
 void Tx1_Handler(void){
   Serial1.TxHandler();
@@ -103,6 +104,7 @@ void Rx1_Handler(void){
 #endif
 
 #ifdef USE_USART2
+UART_HandleTypeDef huart2;
 UARTClass Serial2(&huart2, USART2_IRQn, 1, USART2);
 void Tx2_Handler(void){
   Serial2.TxHandler();
@@ -113,6 +115,7 @@ void Rx2_Handler(void){
 #endif
 
 #ifdef USE_USART3
+UART_HandleTypeDef huart3;
 UARTClass Serial3(&huart3, USART3_4_IRQn, 2, USART3);
 void Tx3_Handler(void){
   Serial3.TxHandler();
@@ -123,6 +126,7 @@ void Rx3_Handler(void){
 #endif
 
 #ifdef USE_USART4
+UART_HandleTypeDef huart4;
 UARTClass Serial4(&huart4, USART3_4_IRQn, 3, USART4);
 void Tx4_Handler(void){
   Serial4.TxHandler();
@@ -134,10 +138,13 @@ void Rx4_Handler(void){
 
 #ifdef USE_USBSerial
 USBSerial Serial;
-
 void StartUSBSerial (void){
   Serial.begin(9600);
 }
+#endif
+
+#ifdef USE_TIMER3
+TIM_HandleTypeDef htim3;
 #endif
 
 TIM_HandleTypeDef * variant_get_timer_handle(uint32_t ulPin)

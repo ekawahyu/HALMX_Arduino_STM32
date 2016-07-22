@@ -44,14 +44,14 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc;
 
-TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim14;
-TIM_HandleTypeDef htim16;
-TIM_HandleTypeDef htim17;
-
-UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart3;
-UART_HandleTypeDef huart4;
+//TIM_HandleTypeDef htim3;
+//TIM_HandleTypeDef htim14;
+//TIM_HandleTypeDef htim16;
+//TIM_HandleTypeDef htim17;
+//
+//UART_HandleTypeDef huart1;
+//UART_HandleTypeDef huart3;
+//UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
