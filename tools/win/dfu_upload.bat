@@ -12,10 +12,10 @@ set str=%4
 set str=%str:/=\%
 
 rem: Sending magic word to enter DFU mode
-echo 1EAF > %1
+echo 1EAF > \\.\%1
 
 rem: Delay time uses ping
 ping -n 2 127.0.0.1 > nul
 
 rem: Flashing using dfu-util
-dfu_util\dfu-util -d %3 -a %2 -s 0x08000000:leave -D %4
+dfu_util\dfu-util -d %3 -a %2 -s 0x08000000:leave -D %str%
